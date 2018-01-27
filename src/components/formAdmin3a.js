@@ -1,56 +1,75 @@
 import React from 'react';
-import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Checkbox from 'material-ui/Checkbox';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
-import Paper from 'material-ui/Paper';
 
 const TextForm3a = () => (<div class="container">
   <form>
     <h2>Choose service plan</h2>
     <h3>All fields are required</h3>
-    <h4>Billing plan</h4><br/>
+    <h4>Billing plan</h4>
     <RadioButtonGroup name="Billing">
-      <RadioButton value="prepaidProgram" label={["This is , <strong>not</strong>,  working."]}/>
+      <RadioButton value="prepaidProgram" label="Use prepaid program"/>
       <RadioButton value="tierProgram" label="Select tier"/>
     </RadioButtonGroup>
 
+    <div className="formRow">
+      <div className="formColumn">
+        <h2>Select tier</h2>
+        <h3>Start your 30-day free trail.</h3>
+      </div>
+    </div>
+
     <div class="formRow">
       <div class="formColumn">
-
-        <h4>Billing plan</h4>
-        <label><input type="radio" name="gender" value="male"/>
-          LITE PTT LW<br/>
-          <span className="optionText">$10 per user/month</span><br/></label>
-        <label><input type="radio" name="gender" value="male"/>
-          PREMIUM<br/>
-          <span className="optionText">$15 per user/month</span><br/></label>
+        <h4>Select billing plan</h4>
+        <RadioButtonGroup name="selectTiers">
+          <RadioButton value="litePTT" label={[
+              "LITE PTT LW", <br/>,
+              <span className="optionText">$10 per user / month</span>
+            ]}/>
+          <RadioButton value="premium" label={[
+              "PREMIUM", <br/>,
+              <span className="optionText">$15 per user / month</span>
+            ]}/>
+        </RadioButtonGroup>
       </div>
       <div class="formColumn">
         <h4>Include add ons (Optional)</h4>
-        <label><input type="radio" name="gender" value="male"/>Do not include add ons</label><br/>
-        <label><input type="radio" name="gender" value="male"/>
-          Include all add ons<br/>
-          <span className="optionText">$10 per user / month</span><br/>
-          <ul>
-            <li>24/7 ERC Monitoring</li>
-            <li>Indoor location / custom map
-overlays</li>
-            <li>Personal gas detector support</li>
-          </ul>
-        </label>
-        <label><input type="radio" name="gender" value="male"/>
-          Include all add ons<br/>
-          <span className="optionText">$10 per user / month</span><br/>
-          <ul>
-            <li><label><input type="Checkbox"/> 24/7 ERC Monitoring <br/> <span class="optionText">$5 per user/month</span></label></li>
-            <li><label><input type="Checkbox"/> Indoor location / custom
-map overlays <br/> <span class="optionText">$5 per user/month</span></label></li>
-            <li><label><input type="Checkbox"/> Personal gas detector
-support <br/> <span class="optionText">$5 per user/month</span></label></li>
-          </ul>
-        </label>
+        <RadioButtonGroup name="addons">
+          <RadioButton value="noAddOns" label="Do not include add ons"/>
+          <RadioButton value="allAddOns" label={[
+              "Include all add ons", <br/>,
+              <span className="optionText">$10 per user / month</span>,
+              <ul>
+                <li>24/7 ERC Monitoring</li>
+                <li>Indoor location / custom map overlays</li>
+                <li>Personal gas detector support</li>
+              </ul>
+            ]}/>
+          <RadioButton value="selectAddOns" label={[
+              "Select add ons", <br/>,
+              <span className="optionText">$5 each per user / month</span>
+            ]}/>
+        </RadioButtonGroup>
+      </div>
+      <div class="formColumn">
+        <h4>Select add ons</h4>
+        <Checkbox label={[
+            "24/7 ERC Monitoring", <br/>,
+            <span className="optionText">$5 per user / month</span>
+          ]}/>
+        <Checkbox label={[
+            "Indoor location / custom map overlays", <br/>,
+            <span className="optionText">$5 per user / month</span>
+          ]}/>
+        <Checkbox label={[
+            "Personal gas detector support", <br/>,
+            <span className="optionText">$5 per user / month</span>
+          ]}/>
+        <p className="totalAddOns">2 add ons = $10 per user/month</p>
+
       </div>
 
     </div>

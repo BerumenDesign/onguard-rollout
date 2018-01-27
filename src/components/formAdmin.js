@@ -7,7 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 
 
 
-const TextForm = () => (<div class="container">
+const TextForm = () => (<div className="container">
   <form>
     <h2>Data Center Region</h2>
     <h3>All fields are required</h3>

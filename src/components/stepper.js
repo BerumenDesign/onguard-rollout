@@ -56,7 +56,7 @@ class HorizontalLinearStepper extends React.Component {
       margin: '0 16px'
     };
 
-    return (<div>
+    return (<div className="container">
       <div className="formRow">
         <Stepper activeStep={stepIndex}>
           <Step>
