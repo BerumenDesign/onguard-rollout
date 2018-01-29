@@ -1,18 +1,22 @@
 import React from 'react';
 import {Route} from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import NewTheme from './theme/muiTheme.js'
-import HorizontalLinearStepper from './components/stepper.js'
-import AppBar from './components/appBar.js'
+import HorizontalLinearStepper from './components/stepper.js';
+import AppBar from './components/appBar.js';
 import TextForm from './components/formAdmin.js';
 import TextForm1 from './components/formAdmin1.js';
 import TextForm2 from './components/formAdmin2.js';
 import TextForm3 from './components/formAdmin3.js';
 import TextForm3a from './components/formAdmin3a.js';
 import TextForm4 from './components/formAdmin4.js';
-// import logo from './logo.svg';
+import TextForm4a from './components/formAdmin4a.js';
+import TextForm5 from './components/formAdmin5.js';
+import TextForm6 from './components/formAdmin6.js';
+import FormCreateGroup from './components/formCreateGroup.js';
+import FormCreateGroupa from './components/formCreateGroupa.js';
+import FormCreateGroup1 from './components/formCreateGroup1.js';
+import FormAddUserInfo from './components/formAddUserInfo.js';
 import './App.css';
-
 
 const App = () => (
   <MuiThemeProvider>
@@ -60,9 +64,15 @@ class Register extends React.Component {
         <TextForm3 billing={this.state.billing} onChange={this.onChange} />
         <TextForm3a/>
         <TextForm4/>
+        <TextForm4a/>
+        <TextForm5/>
+        <TextForm6/>
+        <FormCreateGroup/>
+        <FormCreateGroupa/>
+        <FormCreateGroup1/>
+        <FormAddUserInfo/>
       </div>
     )
   }
 }
-
 export default App;

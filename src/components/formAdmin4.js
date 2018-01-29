@@ -5,14 +5,17 @@ import FlatButton from 'material-ui/FlatButton';
 const TextForm4 = () => (<div class="container">
   <div className="formRow">
     <div className="formColumn">
-      <h2>Congratulations</h2>
-      <h3>Your admin account has been created</h3>
+      <h2>Payment info (optional)</h2>
+      <p>To ensure no interruption of service please enter alternative payment information to be used after the prepaid plan has expired</p>
 
-    <h4>Do you want to create a group and invite users?</h4>
-  <RaisedButton label="YES, LET’S DO IT" primary={true} />
-  <FlatButton label="NO, I WILL DO IT LATER" />
+      <RaisedButton label="Enter payment method" primary={true}/>
 
     </div>
+
+  </div>
+  <div className="formButton">
+    <FlatButton label="Cancel"/>
+    <RaisedButton label="Continue" primary={true}/>
   </div>
 </div>);
 
