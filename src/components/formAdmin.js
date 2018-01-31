@@ -1,7 +1,5 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
 import RegionSelector from './common/RegionSelector';
 
 class TextForm extends React.Component {
@@ -23,10 +21,6 @@ class TextForm extends React.Component {
             <TextField name="employeeCount" floatingLabelText="Estimated number of employees" floatingLabelFixed={false} onChange={this.onEmployeeCountChange.bind(this)} value={this.props.employeeCount} />
             <br/>
           </div>
-        </div>
-        <div className="formButton">
-          <FlatButton label="Cancel"/>
-          <RaisedButton label="Continue" primary={true}/>
         </div>
       </form>
     );

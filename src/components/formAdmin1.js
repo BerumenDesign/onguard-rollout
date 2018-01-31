@@ -1,7 +1,5 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
 
 const TextForm1 = (props) => {
   const onChange = (e) => {
@@ -29,10 +27,6 @@ const TextForm1 = (props) => {
           <TextField floatingLabelText="Password" name="password" floatingLabelFixed={false} onChange={onChange} />
           <br/>
         </div>
-      </div>
-      <div className="formButton">
-        <FlatButton label="Cancel"/>
-        <RaisedButton label="Continue" primary={true}/>
       </div>
     </form>
   );

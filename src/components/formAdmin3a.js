@@ -1,6 +1,4 @@
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
 import Checkbox from 'material-ui/Checkbox';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 
@@ -72,10 +70,6 @@ const TextForm3a = () => (<div class="container">
 
       </div>
 
-    </div>
-    <div className="formButton">
-      <FlatButton label="Cancel"/>
-      <RaisedButton label="Continue" primary={true}/>
     </div>
   </form>
 
