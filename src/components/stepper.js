@@ -56,9 +56,9 @@ class HorizontalLinearStepper extends React.Component {
       margin: '0 16px'
     };
 
-    return (<div className="container">
+    return (<div className="">
       <div className="formRow">
-        <Stepper activeStep={stepIndex}>
+        <Stepper activeStep={this.props.step}>
           <Step>
             <StepLabel>
               <span className="hideMobile">Data center region</span>
@@ -100,8 +100,8 @@ class HorizontalLinearStepper extends React.Component {
               to reset the example.
             </p>)
             : (<div>
-              <p>{this.getStepContent(stepIndex)}</p>
-              <div style={{
+              {/* <p>{this.getStepContent(stepIndex)}</p> */}
+              {/* <div style={{
                   marginTop: 12
                 }}>
                 <FlatButton label="Back" disabled={stepIndex === 0} onClick={this.handlePrev} style={{
@@ -110,7 +110,7 @@ class HorizontalLinearStepper extends React.Component {
                 <RaisedButton label={stepIndex === 2
                     ? 'Finish'
                     : 'Next'} primary={true} onClick={this.handleNext}/>
-              </div>
+              </div> */}
             </div>)
         }
       </div>
