@@ -16,21 +16,24 @@ import FormCreateGroup from './components/formCreateGroup.js';
 import FormCreateGroupa from './components/formCreateGroupa.js';
 import FormCreateGroup1 from './components/formCreateGroup1.js';
 import FormAddUserInfo from './components/formAddUserInfo.js';
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 import './App.css';
 
 const App = () => (
-  <MuiThemeProvider>
-    <AppBar />
-    <div className="container">
-      <Route path="/" component={Register} />
-    </div>
-  </MuiThemeProvider>
+    <MuiThemeProvider>
+      <AppBar />
+      <div className="container">
+        <Route path="/" component={Register} />
+      </div>
+    </MuiThemeProvider>
 );
 
 class Register extends React.Component {
   constructor() {
     super();
     this.state = {
+      step: 0,
       region: '',
       employeeCount: '',
       user: {},
@@ -46,6 +49,7 @@ class Register extends React.Component {
       }
     };
     this.onChange = this.onChange.bind(this);
+    this.nextStep = this.nextStep.bind(this);
   }
   onChange(data) {
     console.log('App.onChange', data);
@@ -53,16 +57,19 @@ class Register extends React.Component {
       console.log('App.onChange.then', this.state);
     });
   }
+  nextStep() {
+    this.setState({ step: ++this.state.step });
+  }
   render() {
     return (
       <div>
-        <HorizontalLinearStepper/>
+        <HorizontalLinearStepper step={this.state.step} />
 
-        <TextForm onChange={this.onChange} region={this.state.region} employeeCount={this.state.employeeCount} />
-        <TextForm1 user={this.state.user} onChange={this.onChange} />
-        <TextForm2 company={this.state.company} onChange={this.onChange} />
-        <TextForm3 billing={this.state.billing} onChange={this.onChange} />
-        <TextForm3a/>
+        {this.state.step === 0 ? <TextForm onChange={this.onChange} region={this.state.region} employeeCount={this.state.employeeCount} /> : null}
+        {this.state.step === 1 ? <TextForm1 user={this.state.user} onChange={this.onChange} /> : null}
+        {this.state.step === 2 ? <TextForm2 company={this.state.company} onChange={this.onChange} /> : null}
+        {this.state.step === 3 ? <TextForm3 billing={this.state.billing} onChange={this.onChange} /> : null}
+        {/* <TextForm3a/>
         <TextForm4/>
         <TextForm4a/>
         <TextForm5/>
@@ -70,7 +77,12 @@ class Register extends React.Component {
         <FormCreateGroup/>
         <FormCreateGroupa/>
         <FormCreateGroup1/>
-        <FormAddUserInfo/>
+        <FormAddUserInfo/> */}
+
+        <div className="formButton">
+          <FlatButton label="Cancel"/>
+          <RaisedButton label="Continue" primary={true} onClick={this.nextStep} />
+        </div>
       </div>
     )
   }
