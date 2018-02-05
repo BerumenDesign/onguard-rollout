@@ -1,3 +1,8 @@
+const _isValidEmail = function ( email ) {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test( email );
+};
+
 const Validation = {
     IMEI: function(value) {
         return new Promise((resolve, reject) => {
@@ -28,6 +33,17 @@ const Validation = {
                 } else {
                     reject();
                 }
+            }
+        });
+    },
+    email: function(value) {
+        return new Promise((resolve, reject) => {
+            var email = value + '';
+
+            if (_isValidEmail(email)) {
+                resolve();
+            } else {
+                reject();
             }
         });
     }
