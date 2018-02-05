@@ -54,7 +54,7 @@ const RegionSelector = (props) => {
     props.onChange(v);
   };
   return (
-    <SelectField autoWidth={true} floatingLabelText="Select region" onChange={onChange} value={props.value}>
+    <SelectField autoWidth={true} floatingLabelText="Select region" onChange={onChange} value={props.value} errorText={props.error}>
       {
         regions.map(function(region) {
           return (
