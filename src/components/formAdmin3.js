@@ -49,8 +49,8 @@ class TierSelector extends React.Component {
   }
   render() {
     return (
-      <div class="formRow">
-        <div class="formColumn">
+      <div className="formRow">
+        <div className="formColumn">
           <h4>Select billing plan</h4>
           <RadioButtonGroup name="plan" onChange={this.onChange}>
             <RadioButton value="litePTT" label={[
@@ -83,7 +83,22 @@ class TierAddonsSelector extends React.Component {
         'monitoring': false,
         'custom_overlays': false,
         'gas_detector': false
-      }
+      },
+      addons: {
+        'monitoring': {
+          label: '24/7 ERC Monitoring',
+          price: 5
+        },
+        'custom_overlays': {
+          label: 'Indoor location / custom map overlays',
+          price: 5
+        },
+        'gas_detector': {
+          label: 'Personal gas detector support',
+          price: 5
+        }
+      },
+      addon_options: ['monitoring', 'custom_overlays', 'gas_detector']
     };
     this.onChange = this.onChange.bind(this);
     this.notifyParent = this.notifyParent.bind(this);
@@ -98,7 +113,7 @@ class TierAddonsSelector extends React.Component {
     return (
       <div>
          <div class="formColumn">
-          <h4>Include add ons (Optional)</h4>
+          {/* <h4>Include add ons (Optional)</h4> */}
           {/* <RadioButtonGroup name="addons">
             <RadioButton value="noAddOns" label="Do not include add ons"/>
             <RadioButton value="allAddOns" label={[
@@ -117,8 +132,18 @@ class TierAddonsSelector extends React.Component {
           </RadioButtonGroup>
         </div> */}
         {/* <div class="formColumn"> */}
-          <h4>Select add ons</h4>
-          <Checkbox name="monitoring" label={[
+          <h4>Select add ons (Optional)</h4>
+          {
+            this.state.addon_options.map((addon) => {
+              return (
+                <Checkbox key={'_addon_option_'+addon} name={addon} label={[
+                  this.state.addons[addon].label, <br/>,
+                  <span className="optionText">${this.state.addons[addon].price} per user / month</span>
+                ]} onCheck={this.onChange} />
+              )
+            }, this)
+          }
+          {/* <Checkbox name="monitoring" label={[
               "24/7 ERC Monitoring", <br/>,
               <span className="optionText">$5 per user / month</span>
             ]} onCheck={this.onChange} />
@@ -130,7 +155,7 @@ class TierAddonsSelector extends React.Component {
               "Personal gas detector support", <br/>,
               <span className="optionText">$5 per user / month</span>
             ]} onCheck={this.onChange} />
-          <p className="totalAddOns">2 add ons = $10 per user/month</p>
+          <p className="totalAddOns">2 add ons = $10 per user/month</p> */}
         </div>
       </div>
     );
