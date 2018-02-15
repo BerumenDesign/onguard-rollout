@@ -8,7 +8,7 @@ const CountrySelector = (props) => {
       props.onChange(v);
     };
     return (
-      <SelectField autoWidth={true} floatingLabelText="Country" value={props.value} onChange={onChange}>
+      <SelectField autoWidth={true} floatingLabelText="Country" value={props.value} onChange={onChange} errorText={props.errorText}>
         <MenuItem value="" primaryText="" />
         {
           countries.map(country => <MenuItem key={country['alpha-2']} value={country['alpha-2']} primaryText={country.name} />)
