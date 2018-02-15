@@ -19,6 +19,9 @@ import FormAddUserInfo from './components/formAddUserInfo.js';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import './App.css';
+import UncaughtErrors from './components/common/UncaughtErrors';
+
+import FirebaseStore from './stores/FirebaseStore';
 
 const App = () => (
     <MuiThemeProvider>
@@ -33,7 +36,7 @@ class Register extends React.Component {
   constructor() {
     super();
     this.state = {
-      step: 0,
+      step: 2,
       region: '',
       employeeCount: '',
       user: {},
@@ -53,12 +56,18 @@ class Register extends React.Component {
       validation: {
         valid: false,
         fields: {}
-      }
+      },
+      uncaughterrors: []
     };
     this.onChange = this.onChange.bind(this);
     this.nextStep = this.nextStep.bind(this);
     this.onValidation = this.onValidation.bind(this);
     this.isValidated = this.isValidated.bind(this);
+    this.handleErrors = this.handleErrors.bind(this);
+    this.dismissUncaughtError = this.dismissUncaughtError.bind(this);
+  }
+  componentDidMount() {
+    FirebaseStore.initialize();
   }
   onChange(data, cb) {
     console.log('App.onChange', data);
@@ -72,17 +81,36 @@ class Register extends React.Component {
   nextStep() {
     // check that form is valid for given step and throw errors on any invalid fields
     this.isValidated().then(function () {
-      this.setState({ step: ++this.state.step, validation: { valid: false } });
+      let _promise = [];
+      switch (this.state.step) {
+        case 1:
+          _promise.push(FirebaseStore.makeAdmin(this.state.user));
+          break;
+        default:
+          break;
+      }
+      
+      Promise.all(_promise).then(function() {
+        this.setState({ step: ++this.state.step, validation: { valid: false } });
+      }.bind(this))
+      .catch(function (err) {
+        console.error('App.nextStep.promises.failed', err);
+        if (err.errors) {
+          this.handleErrors(err.errors);
+        }
+      }.bind(this));
     }.bind(this));
   }
   isValidated() {
     return new Promise(function (resolve, reject) {
       let validation = {...this.state.validation};
-      let invalidFields = Object.keys(validation.fields).filter(k => !validation.fields[k].valid);
+      let invalidFields = Object.keys(validation.fields || {}).filter(k => !validation.fields[k].valid);
       // set valid based on remaining invalid fields
       validation.valid = invalidFields.length === 0;
       // set invalid fields dirty state to true to force errors to user
       invalidFields.forEach((k) => validation.fields[k].dirty = true);
+
+      console.log('isValidated', validation, invalidFields);
       
       this.setState({ validation }, () => {
         if (!this.state.validation.valid) {
@@ -94,10 +122,36 @@ class Register extends React.Component {
     }.bind(this));
   }
   onValidation(e) {
-    let validation = {...this.state.validation, e};
+    let validation = {...this.state.validation, ...e};
     // check each field and set valid to false if there are invalid fields
     validation.valid = Object.keys(validation.fields).filter(k => !validation.fields[k].valid).length === 0;
     this.setState({ validation });
+  }
+  handleErrors(errors) {
+    let validation = {...this.state.validation};
+    let uncaughterrors = [...this.state.uncaughterrors];
+
+    errors.forEach(function (error) {
+      if (error.type === 'validation') {
+        if (!validation.fields[error.field]) {
+          validation.fields[error.field] = {}
+        }
+        validation.fields[error.field].valid = false;
+        validation.fields[error.field].errorMsg = error.message;
+      }
+
+      if (error.type === 'uncaught') {
+        uncaughterrors.push(error);
+      }
+    });
+    this.setState({validation, uncaughterrors}, function () {
+      console.log('handleErrors.then', this.state.validation, this.state.uncaughterrors);
+    });
+  }
+  dismissUncaughtError(index) {
+    let uncaughterrors = [...this.state.uncaughterrors];
+    uncaughterrors.splice(index, 1);
+    this.setState({ uncaughterrors });
   }
   render() {
     return (
@@ -105,8 +159,8 @@ class Register extends React.Component {
         <HorizontalLinearStepper step={this.state.step} />
 
         {this.state.step === 0 ? <TextForm onChange={this.onChange} onValidation={this.onValidation} validation={this.state.validation} region={this.state.region} employeeCount={this.state.employeeCount} /> : null}
-        {this.state.step === 1 ? <TextForm1 user={this.state.user} onChange={this.onChange} /> : null}
-        {this.state.step === 2 ? <TextForm2 company={this.state.company} onChange={this.onChange} /> : null}
+        {this.state.step === 1 ? <TextForm1 user={this.state.user} onValidation={this.onValidation} validation={this.state.validation} onChange={this.onChange} /> : null}
+        {this.state.step === 2 ? <TextForm2 company={this.state.company} onChange={this.onChange} onValidation={this.onValidation} validation={this.state.validation} /> : null}
         {this.state.step === 3 ? <TextForm3 billing={this.state.billing} onChange={this.onChange} /> : null}
         {this.state.step === 4 ? <TextForm4 billing={this.state.billing} onChange={this.onChange} /> : null}
         {this.state.step === 5 ? <TextForm5/> : null}
@@ -125,8 +179,14 @@ class Register extends React.Component {
           <FlatButton label="Cancel"/>
           <RaisedButton label="Continue" primary={true} onClick={this.nextStep} />
         </div>
+        {
+          this.state.uncaughterrors.map((error, index) => {
+            return <UncaughtErrors error={error} onClose={this.dismissUncaughtError.bind(index)} />
+          })
+        }
       </div>
     )
   }
 }
+
 export default App;
