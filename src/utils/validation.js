@@ -35,6 +35,11 @@ const _isValidRegion = function (region) {
     return true;
 };
 
+const _isValidInvoice = function (invoice) {
+    // figure out if any vaildation needed for invoice
+    return true;
+}
+
 const _hasValue = function (val) {
     return val !== null && val !== undefined && val !== '';
 };
@@ -248,6 +253,23 @@ const Validation = {
                 resolve();
             }
         });
+    },
+    invoice: function(value, optional) {
+        return new Promise((resolve, reject) => {
+            if (!_hasValue(value) && !optional) {
+                reject();
+            } else if (!_hasValue(value) && optional) {
+                resolve();
+            } else {
+                const invoice = value + '';
+
+                if (_isValidInvoice(invoice)) {
+                    resolve();
+                } else {
+                    reject();
+                }
+            }
+        })
     }
 };
 
