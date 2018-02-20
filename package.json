@@ -4,14 +4,17 @@
   "private": true,
   "dependencies": {
     "firebase": "^4.9.0",
+    "js-yaml": "^3.10.0",
     "material-ui": "^0.20.0",
+    "mustache": "^2.3.0",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-flexbox-grid": "^2.0.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.0.17"
+    "react-scripts": "1.0.17",
+    "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
