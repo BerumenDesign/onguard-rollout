@@ -1,6 +1,7 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import Validation from '../utils/validation';
+import i18n from '../utils/i18n';
 
 class TextForm1 extends React.Component {
   constructor() {
@@ -70,23 +71,23 @@ class TextForm1 extends React.Component {
         
         switch (field) {
           case 'firstName':
-            errorMsg = 'You must enter your first name';
+            errorMsg = i18n.string('error_first_name_required');
             _promise = Validation.name(this.props.user[field]);
             break;
           case 'lastName':
-            errorMsg = 'You must enter your last name';
+            errorMsg = i18n.string('error_last_name_required');
             _promise = Validation.name(this.props.user[field]);
             break;
           case 'phone':
-            errorMsg = 'You must enter a valid phone number';
+            errorMsg = i18n.string('error_invalid_phone_number');
             _promise = Validation.phone(this.props.user[field]);
             break;
           case 'email':
-            errorMsg = 'You must enter a valid Email address';
+            errorMsg = i18n.string('error_invalid_email_address');
             _promise = Validation.email(this.props.user[field]);
             break;
           case 'password':
-            errorMsg = 'Password must be at least 8 characters';
+            errorMsg = i18n.string('error_password_meet_criteria');
             _promise = Validation.password(this.props.user[field]);
             break;
           default:
@@ -130,24 +131,24 @@ class TextForm1 extends React.Component {
   render() {
     return (
       <form>
-        <h2>Create admin account</h2>
-        <h3>All fields are required</h3>
+        <h2>{i18n.string('label_create_admin_account')}</h2>
+        <h3>{i18n.string('label_all_fields_required')}</h3>
   
         <div className="formRow">
           <div className="formColumn">
             <h4>Basic info</h4>
-            <TextField floatingLabelText="First name" name="firstName" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('firstName')} />
+            <TextField floatingLabelText={i18n.string('label_first_name')} name="firstName" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('firstName')} />
             <br/>
-            <TextField floatingLabelText="Last name" name="lastName" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('lastName')} />
+            <TextField floatingLabelText={i18n.string('label_last_name')} name="lastName" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('lastName')} />
             <br/>
-            <TextField floatingLabelText="Mobile phone number" name="phone" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('phone')} />
+            <TextField floatingLabelText={i18n.string('label_phone_number')} name="phone" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('phone')} />
             <br/>
           </div>
           <div className="formColumn">
-            <h4>Login credentials</h4>
-            <TextField floatingLabelText="Username" name="email" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('email')} />
+            <h4>{i18n.string('label_login_credentials')}</h4>
+            <TextField floatingLabelText={i18n.string('label_username')} hintText={i18n.string('hint_username')} name="email" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('email')} />
             <br/>
-            <TextField floatingLabelText="Password" name="password" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('password')} />
+            <TextField floatingLabelText={i18n.string('label_password')} name="password" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('password')} />
             <br/>
           </div>
         </div>

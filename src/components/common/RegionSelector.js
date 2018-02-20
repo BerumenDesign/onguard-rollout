@@ -1,6 +1,7 @@
 import React from 'react';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import i18n from '../../utils/i18n';
 
 const regions = [
   {
@@ -54,7 +55,7 @@ const RegionSelector = (props) => {
     props.onChange(v);
   };
   return (
-    <SelectField autoWidth={true} floatingLabelText="Select region" onChange={onChange} value={props.value} errorText={props.error}>
+    <SelectField autoWidth={true} floatingLabelText={i18n.string('label_select_region')} onChange={onChange} value={props.value} errorText={props.error}>
       {
         regions.map(function(region) {
           return (

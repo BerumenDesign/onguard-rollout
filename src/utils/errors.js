@@ -24,6 +24,7 @@ const _errorCodes = {
     },
     'uncaughtexception': {
         type: 'uncaught',
+        title: 'Unexpected error',
         message: 'An Unexpected Error has occurred'
     }
 };

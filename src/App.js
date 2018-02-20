@@ -12,6 +12,7 @@ import TextForm4 from './components/formAdmin4.js';
 import TextForm4a from './components/formAdmin4a.js';
 import TextForm5 from './components/formAdmin5.js';
 import TextForm6 from './components/formAdmin6.js';
+import ProofOfAuthority from './components/ProofOfAuthority';
 import FormCreateGroup from './components/formCreateGroup.js';
 import FormCreateGroupa from './components/formCreateGroupa.js';
 import FormCreateGroup1 from './components/formCreateGroup1.js';
@@ -20,8 +21,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import './App.css';
 import UncaughtErrors from './components/common/UncaughtErrors';
-
 import FirebaseStore from './stores/FirebaseStore';
+import i18n from './utils/i18n';
 
 const App = () => (
     <MuiThemeProvider>
@@ -36,9 +37,11 @@ class Register extends React.Component {
   constructor() {
     super();
     this.state = {
-      step: 2,
+      step: 1,
       region: '',
       employeeCount: '',
+      invoice: '',
+      firstImei: '',
       user: {},
       company: {
         billing: {},
@@ -122,6 +125,7 @@ class Register extends React.Component {
     }.bind(this));
   }
   onValidation(e) {
+    console.log('App.onValidation', e)
     let validation = {...this.state.validation, ...e};
     // check each field and set valid to false if there are invalid fields
     validation.valid = Object.keys(validation.fields).filter(k => !validation.fields[k].valid).length === 0;
@@ -158,32 +162,35 @@ class Register extends React.Component {
       <div>
         <HorizontalLinearStepper step={this.state.step} />
 
-        {this.state.step === 0 ? <TextForm onChange={this.onChange} onValidation={this.onValidation} validation={this.state.validation} region={this.state.region} employeeCount={this.state.employeeCount} /> : null}
-        {this.state.step === 1 ? <TextForm1 user={this.state.user} onValidation={this.onValidation} validation={this.state.validation} onChange={this.onChange} /> : null}
-        {this.state.step === 2 ? <TextForm2 company={this.state.company} onChange={this.onChange} onValidation={this.onValidation} validation={this.state.validation} /> : null}
-        {this.state.step === 3 ? <TextForm3 billing={this.state.billing} onChange={this.onChange} /> : null}
-        {this.state.step === 4 ? <TextForm4 billing={this.state.billing} onChange={this.onChange} /> : null}
-        {this.state.step === 5 ? <TextForm5/> : null}
-        {this.state.step === 6 ? <TextForm6/> : null}
-        {/* <TextForm3a/>
-        <TextForm4/>
-        <TextForm4a/>
-        <TextForm5/>
-        <TextForm6/>
-        <FormCreateGroup/>
-        <FormCreateGroupa/>
-        <FormCreateGroup1/>
-        <FormAddUserInfo/> */}
+        <div>
+          {this.state.step === 0 ? <TextForm onChange={this.onChange} onValidation={this.onValidation} validation={this.state.validation} region={this.state.region} employeeCount={this.state.employeeCount} /> : null}
+          {this.state.step === 1 ? <TextForm1 user={this.state.user} onValidation={this.onValidation} validation={this.state.validation} onChange={this.onChange} /> : null}
+          {this.state.step === 2 ? <ProofOfAuthority invoice={this.state.invoice} firstImei={this.state.firstImei} /> : null}
+          {/* {this.state.step === 2 ? <TextForm2 company={this.state.company} onChange={this.onChange} onValidation={this.onValidation} validation={this.state.validation} /> : null} */}
+          {this.state.step === 3 ? <TextForm3 billing={this.state.billing} onChange={this.onChange} /> : null}
+          {this.state.step === 4 ? <TextForm4 billing={this.state.billing} onChange={this.onChange} /> : null}
+          {this.state.step === 5 ? <TextForm5/> : null}
+          {this.state.step === 6 ? <TextForm6/> : null}
+          {/* <TextForm3a/>
+          <TextForm4/>
+          <TextForm4a/>
+          <TextForm5/>
+          <TextForm6/>
+          <FormCreateGroup/>
+          <FormCreateGroupa/>
+          <FormCreateGroup1/>
+          <FormAddUserInfo/> */}
 
-        <div className="formButton">
-          <FlatButton label="Cancel"/>
-          <RaisedButton label="Continue" primary={true} onClick={this.nextStep} />
+          <div className="formButton">
+            <FlatButton label={i18n.string('btn_cancel')} />
+            <RaisedButton label={i18n.string('btn_continue')} primary={true} onClick={this.nextStep} />
+          </div>
+          {
+            this.state.uncaughterrors.map((error, index) => {
+              return <UncaughtErrors error={error} onClose={this.dismissUncaughtError.bind(index)} />
+            })
+          }
         </div>
-        {
-          this.state.uncaughterrors.map((error, index) => {
-            return <UncaughtErrors error={error} onClose={this.dismissUncaughtError.bind(index)} />
-          })
-        }
       </div>
     )
   }

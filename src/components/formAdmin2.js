@@ -3,6 +3,7 @@ import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import Address from './common/Address';
 import Validation from '../utils/validation';
+import i18n from '../utils/i18n';
 
 class TextForm2 extends React.Component {
   constructor() {
@@ -18,6 +19,7 @@ class TextForm2 extends React.Component {
     this.onBillingValidation = this.onBillingValidation.bind(this);
     this.validate = this.validate.bind(this);
     this.showError = this.showError.bind(this);
+    this.toggleSameAddress = this.toggleSameAddress.bind(this);
   }
   componentDidMount() {
     let __validation = {...this.props.validation};
@@ -110,15 +112,15 @@ class TextForm2 extends React.Component {
         
         switch (field) {
           case 'name':
-            errorMsg = 'You must enter Company name';
+            errorMsg = i18n.string('error_company_name_required');
             _promise = Validation.name(this.props.company[field]);
             break;
           case 'phone':
-            errorMsg = 'You must enter a valid phone number';
+            errorMsg = i18n.string('error_invalid_phone_number');
             _promise = Validation.phone(this.props.company[field]);
             break;
           case 'email':
-            errorMsg = 'You must enter a valid Email address';
+            errorMsg = i18n.string('error_invalid_email_address');
             _promise = Validation.email(this.props.company[field], true);
             break;
           default:
@@ -159,23 +161,43 @@ class TextForm2 extends React.Component {
   showError(field) {
     return this.props.validation && this.props.validation.fields && this.props.validation.fields[field] && this.props.validation.fields[field].dirty ? this.props.validation.fields[field].errorMsg : false;
   }
+  toggleSameAddress(e) {
+    let checked = e.target.checked;
+    let company = {...this.props.company};
+
+    company.sameAsCompanyAddress = checked;
+
+    if (checked) {
+      // remove billing address,
+      company.billing = {};
+    }
+
+    this.props.onChange({company}, function() {
+      if (checked && this.props.validation && this.props.onValidation) {
+        // remove billing validation
+        let validation = {...this.props.validation};
+        ['billing.address', 'billing.city', 'billing.zip', 'billing.country', 'billing.state'].forEach(key => delete validation.fields[key]);
+        this.props.onValidation(validation); 
+      }
+    }.bind(this));
+  }
   render() {
     return (
       <form>
-        <h2>Add company</h2>
-        <h3>All fields are required</h3>
+        <h2>{i18n.string('label_add_company')}</h2>
+        <h3>{i18n.string('label_all_fields_required')}</h3>
         <div className="formRow">
           <div className="formColumn">
             <h4>Company info</h4>
-            <TextField floatingLabelText="Company Name" floatingLabelFixed={false} name="name" value={this.props.company.name} onChange={this.onChange} errorText={this.showError('name')} />
+            <TextField floatingLabelText={i18n.string('label_company_name')} floatingLabelFixed={false} name="name" value={this.props.company.name} onChange={this.onChange} errorText={this.showError('name')} />
             <br/>
-            <TextField floatingLabelText="Company phone" floatingLabelFixed={false} name="phone" value={this.props.company.phone} onChange={this.onChange} errorText={this.showError('phone')} />
+            <TextField floatingLabelText={i18n.string('label_company_phone')} floatingLabelFixed={false} name="phone" value={this.props.company.phone} onChange={this.onChange} errorText={this.showError('phone')} />
             <br/>
-            <TextField floatingLabelText="Email (Optional)" floatingLabelFixed={false} name="email" value={this.props.company.email} onChange={this.onChange} errorText={this.showError('email')} />
+            <TextField floatingLabelText={i18n.string('label_email') + ' (' + i18n.string('label_optional') + ')'} floatingLabelFixed={false} name="email" value={this.props.company.email} onChange={this.onChange} errorText={this.showError('email')} />
             <br/>
           </div>
           <div className="formColumn">
-            <h4>Company address</h4>
+            <h4>{i18n.string('label_company_address')}</h4>
             <Address 
               address={this.props.company.address.address}
               city={this.props.company.address.city}
@@ -183,12 +205,12 @@ class TextForm2 extends React.Component {
               country={this.props.company.address.country}
               state={this.props.company.address.state}
               onChange={this.onAddressChange} 
-              validation={this.props.validation} 
+              validation={this.state.addressValidation} 
               onValidation={this.onAddressValidation} />
           </div>
           <div className="formColumn">
-            <h4>Billing address</h4>
-            <Checkbox label="Same as company address" onCheck={this.onChange} name="sameAsCompanyAddress" checked={this.props.company.sameAsCompanyAddress} /><br/>
+            <h4>{i18n.string('label_billing_address')}</h4>
+            <Checkbox label={i18n.string('label_same_as_company_address')} onCheck={this.toggleSameAddress} name="sameAsCompanyAddress" checked={this.props.company.sameAsCompanyAddress} /><br/>
             {
               this.props.company.sameAsCompanyAddress ? null : (
                 <Address 
@@ -198,7 +220,7 @@ class TextForm2 extends React.Component {
                   country={this.props.company.billing.country}
                   state={this.props.company.billing.state}
                   onChange={this.onBillingChange} 
-                  validation={this.props.validation} 
+                  validation={this.state.billingValidation} 
                   onValidation={this.onBillingValidation} />
               )
             }

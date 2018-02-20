@@ -3,6 +3,7 @@ import TextField from 'material-ui/TextField';
 import CountrySelector from '../common/CountrySelector';
 import StateSelector from '../common/StateSelector';
 import Validation from '../../utils/validation';
+import i18n from '../../utils/i18n';
 
 class Address extends React.Component {
   constructor() {
@@ -57,7 +58,7 @@ class Address extends React.Component {
             if (this.props.onValidation) {
               this.props.onValidation(validation);
             }
-          })
+          }.bind(this))
           .catch(function() {
             console.error('Address.validation.failed', this.props.validation);
           });
@@ -73,28 +74,28 @@ class Address extends React.Component {
             if (this.props.onValidation) {
               this.props.onValidation(validation);
             }
-          })
+          }.bind(this))
           .catch(function() {
             console.error('Address.validation.failed', this.props.validation);
           });
       }
-    });
+    }.bind(this));
   }
   onStateChange(state) {
     const {address, city, zip, country} = this.props;
     this.props.onChange({address, city, zip, country, state}, function() {
       if (this.props.validation) {
-        this.validate('country')
+        this.validate('state')
           .then(function(validation) {
             if (this.props.onValidation) {
               this.props.onValidation(validation);
             }
-          })
+          }.bind(this))
           .catch(function() {
             console.error('Address.validation.failed', this.props.validation);
           });
       }
-    });
+    }.bind(this));
   }
   showError(field) {
     return this.props.validation && this.props.validation.fields && this.props.validation.fields[field] && this.props.validation.fields[field].dirty && !this.props.validation.fields[field].valid ? this.props.validation.fields[field].errorMsg : false;
@@ -167,11 +168,11 @@ class Address extends React.Component {
   render() {
     return (
       <div>
-        <TextField floatingLabelText="Address" floatingLabelFixed={false} name="address" address={this.props.address} onChange={this.onChange} errorText={this.showError('address')} />
+        <TextField floatingLabelText={i18n.string('label_address')} floatingLabelFixed={false} name="address" address={this.props.address} onChange={this.onChange} errorText={this.showError('address')} />
         <br/>
-        <TextField floatingLabelText="City" floatingLabelFixed={false} name="city" value={this.props.city} onChange={this.onChange} errorText={this.showError('city')} />
+        <TextField floatingLabelText={i18n.string('label_city')} floatingLabelFixed={false} name="city" value={this.props.city} onChange={this.onChange} errorText={this.showError('city')} />
         <br/>
-        <TextField floatingLabelText="Postal code" floatingLabelFixed={false} name="zip" value={this.props.zip} onChange={this.onChange} errorText={this.showError('zip')} />
+        <TextField floatingLabelText={i18n.string('label_postal_code')} floatingLabelFixed={false} name="zip" value={this.props.zip} onChange={this.onChange} errorText={this.showError('zip')} />
         <br/>
         <CountrySelector name="country" value={this.props.country} onChange={this.onCountryChange} errorText={this.showError('country')} />
         <br/>

@@ -2,6 +2,7 @@ import React from 'react';
 import TextField from 'material-ui/TextField';
 import RegionSelector from './common/RegionSelector';
 import Validation from '../utils/validation';
+import i18n from '../utils/i18n';
 
 class TextForm extends React.Component {
   componentDidMount() {
@@ -75,13 +76,13 @@ class TextForm extends React.Component {
             // let region = this.props[field];
             // valid = region && region.length;
             _promise = Validation.dataCenterRegion(this.props[field]);
-            errorMsg = 'You must select a region';
+            errorMsg = i18n.string('error_region_required');
             break;
           case 'employeeCount':
             // let count = this.props[field];
             // valid = count && count > 0;
             _promise = Validation.count(this.props[field], 1, 1000000);
-            errorMsg = 'Employee count must be greater than 1';
+            errorMsg = i18n.string('error_employee_count_min');
         }
 
         _promise
@@ -119,15 +120,15 @@ class TextForm extends React.Component {
   render() {
     return (
       <form>
-        <h2>Data Center Region</h2>
-        <h3>All fields are required</h3>
+        <h2>{i18n.string('label_data_center_region')}</h2>
+        <h3>{i18n.string('label_all_fields_required')}</h3>
         <div className="formRow">
           <div className="formColumn">
             <RegionSelector onChange={this.onRegionChange.bind(this)} value={this.props.region} error={this.showError('region')} />
             <br/>
             <TextField
               name="employeeCount"
-              floatingLabelText="Estimated number of employees"
+              floatingLabelText={i18n.string('label_estimated_number_employees')}
               floatingLabelFixed={false}
               errorText={this.showError('employeeCount')}
               onChange={this.onEmployeeCountChange.bind(this)}
