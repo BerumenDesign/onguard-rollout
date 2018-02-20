@@ -1,14 +1,15 @@
 import firebase from './firebase';
 import Errors from '../utils/errors';
+import Config from '../config.json';
 
 let state = null;
 
 const store = {
     initialize: () => {
         const params = {
-            apiKey: 'AIzaSyDtJwhZVsgsgz0W-7VKPG593ZiOXSc8jcM',
-            authDomain: 'cg-community' + '.firebaseapp.com',
-            databaseURL: 'https://' + 'cg-community' + '.firebaseio.com'
+            apiKey: Config.firebaseApiKey,
+            authDomain: Config.firebaseId + '.firebaseapp.com',
+            databaseURL: 'https://' + Config.firebaseId + '.firebaseio.com'
         };
     
         state = new firebase(params);
@@ -19,30 +20,56 @@ const store = {
                 state.auth().createUserWithEmailAndPassword(params.email.toLowerCase(), params.password)
                 .then(function(user) {
                     const id = _convertToId(params.email.toLowerCase());
-                    const { firstName, lastName, phone } = params;
+                    const { firstName, lastName, phone, shard } = params;
 
-                    state.ref.child('/systemadmins/' + id)
+                    const companies = [
+                        {
+                            canDeleteUsers: false,
+                            companyName: params.company.name,
+                            id: params.company.id
+                        }
+                    ];
+
+                    const fullNameLower = firstName.toLowerCase() + ' ' + lastName.toLowerCase();
+
+                    state.ref.child('/ercadmins/' + id)
                         .set({
-                            emailId: params.email.toLowerCase(),
+                            adminId: params.email.toLowerCase(),
+                            admin: true,
                             uid: user.uid,
                             firstName,
                             lastName,
-                            phone
+                            fullNameLower,
+                            phone,
+                            companies,
+                            shard
                         })
                         .then(function() {
                             resolve({ success: true });
                         })
                         .catch(function(err) {
-                            console.error('FirebaseStore.registerAdmin.setSystemAdmin.failed', err);
+                            console.error('FirebaseStore.makeAdmin.setErcAdmin.failed', err);
                             reject({ success: false, errors: [ Errors.get(err.code) ]});
                         });
                 })
                 .catch(function(err) {
-                    console.error('FirebaseStore.registerAdmin.createUserWithEmailAndPassword.failed', err);
+                    console.error('FirebaseStore.makeAdmin.createUserWithEmailAndPassword.failed', err);
                     reject({ success: false, errors: [ Errors.get(err.code) ]});
                 });
             } catch (e) {
-                console.error('FirebaseStore.registerAdmin.createUserWithEmailAndPassword.unexpectederror', e);
+                console.error('FirebaseStore.makeAdmin.createUserWithEmailAndPassword.unexpectederror', e);
+                reject({ success: false, errors: [ Errors.get(e.code) ]});
+            }
+        });
+    },
+    makeCompany: (params) => {
+        // on hold for now
+        return new Promise((resolve, reject) => {
+            try {
+                const id = _convertToId(params.name);
+                state.ref.child('/companies/' + id)
+            } catch (e) {
+                console.error('FirebaseStore.makeCompany.set.company.unexpectederror', e);
                 reject({ success: false, errors: [ Errors.get(e.code) ]});
             }
         });
