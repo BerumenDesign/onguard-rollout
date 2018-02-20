@@ -1,0 +1,58 @@
+### Buttons
+btn_cancel: "Cancel"
+btn_continue: "Continue"
+btn_close: "Close"
+
+### ProofOfAuthority
+label_use_prepaid_program: "Use prepaid program"
+label_enter_company_invoice_number: "Enter {{company}} invoice number"
+label_enter_first_imei_from_invoice: "Enter the first IMEI from your invoice"
+
+### Admin Creation
+label_create_admin_account: "Create admin account"
+label_login_credentials: "Login credentials"
+label_first_name: "First Name"
+label_last_name: "Last Name"
+label_username: "Username"
+label_password: "Password"
+label_phone_number: "Phone Number"
+
+### Company Creation
+label_company_name: "Company Name"
+label_company_phone: "Company phone"
+label_email: "Email"
+label_optinal: "(Optional)"
+label_same_as_company_address: "Same as company address"
+label_add_company: "Add company"
+label_all_fields_required: "All fields are required"
+label_company_address: "Company address"
+label_billing_address: "Billing address"
+
+### Data Center Region
+label_data_center_region: "Data Center Region"
+label_estimated_number_employees: "Estimated number of employees"
+
+### Region Selector Component
+label_select_region: "Select region"
+
+### Address Component
+label_address: "Address"
+label_city: "City"
+label_postal_code: "Postal Code"
+label_state_or_province: "State / Province"
+label_country: "Country"
+
+### Hints/Placeholders
+hint_username: "e.g. bob@gmail.com"
+
+### Errors
+error_region_required: "You must select a region"
+error_employee_count_min: "Employee count must be greater than 1"
+error_invalid_email_address: "You must enter a valid Email address"
+error_password_meet_criteria: "Password must be at least 8 characters"
+error_invalid_phone_number: "You must enter a valid phone number"
+error_last_name_required: "You must enter your last name"
+error_first_name_required: "You must enter your first name"
+error_company_name_required: "You must enter Company name"
+error_invalid_invoice_number: "You must enter a valid invoice number"
+error_invalid_imei_number: "You must enter a valid IMEI number"
