@@ -1,14 +1,15 @@
 import _firebase from 'firebase';
 
 class FirebaseService {
-    constructor({ apiKey, authDomain, databaseURL }) {
+    constructor({ apiKey, authDomain, databaseURL, name }) {
         this.apiKey = apiKey + '';
         this.authDomain = authDomain + '';
         this.databaseURL = databaseURL + '';
+        this.name = name || 'DEFAULT';
         
         if ( apiKey && authDomain && databaseURL ) {
             try {
-                this.firebaseApp = _firebase.initializeApp({ apiKey, authDomain, databaseURL });
+                this.firebaseApp = _firebase.initializeApp({ apiKey, authDomain, databaseURL }, name);
                 this.ref = _firebase.database().ref();
                 this.auth = _firebase.auth;
             } catch (e) {
