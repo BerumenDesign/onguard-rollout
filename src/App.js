@@ -22,6 +22,7 @@ import FlatButton from 'material-ui/FlatButton';
 import './App.css';
 import UncaughtErrors from './components/common/UncaughtErrors';
 import FirebaseStore from './stores/FirebaseStore';
+import LookupStore from './stores/LookupStore';
 import i18n from './utils/i18n';
 
 const App = () => (
@@ -71,6 +72,7 @@ class Register extends React.Component {
   }
   componentDidMount() {
     FirebaseStore.initialize();
+    LookupStore.initialize();
   }
   onChange(data, cb) {
     console.log('App.onChange', data);
@@ -87,6 +89,9 @@ class Register extends React.Component {
       let _promise = [];
       switch (this.state.step) {
         case 1:
+          _promise.push(FirebaseStore.checkAuthority(this.state.firstImei, this.state.invoice));
+          break;
+        case 2:
           _promise.push(FirebaseStore.makeAdmin(this.state.user));
           break;
         default:
@@ -164,8 +169,8 @@ class Register extends React.Component {
 
         <div>
           {this.state.step === 0 ? <TextForm onChange={this.onChange} onValidation={this.onValidation} validation={this.state.validation} region={this.state.region} employeeCount={this.state.employeeCount} /> : null}
-          {this.state.step === 1 ? <TextForm1 user={this.state.user} onValidation={this.onValidation} validation={this.state.validation} onChange={this.onChange} /> : null}
-          {this.state.step === 2 ? <ProofOfAuthority invoice={this.state.invoice} firstImei={this.state.firstImei} /> : null}
+          {this.state.step === 1 ? <ProofOfAuthority onChange={this.onChange} invoice={this.state.invoice} firstImei={this.state.firstImei} validation={this.state.validation} onValidation={this.onValidation} /> : null}
+          {this.state.step === 2 ? <TextForm1 user={this.state.user} onValidation={this.onValidation} validation={this.state.validation} onChange={this.onChange} /> : null}
           {/* {this.state.step === 2 ? <TextForm2 company={this.state.company} onChange={this.onChange} onValidation={this.onValidation} validation={this.state.validation} /> : null} */}
           {this.state.step === 3 ? <TextForm3 billing={this.state.billing} onChange={this.onChange} /> : null}
           {this.state.step === 4 ? <TextForm4 billing={this.state.billing} onChange={this.onChange} /> : null}
