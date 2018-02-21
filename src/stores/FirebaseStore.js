@@ -88,6 +88,35 @@ const store = {
                     reject(err);
                 });
         });
+    },
+    checkAuthority(imei, invoice) {
+        return new Promise((resolve, reject) => {
+            try{
+                state.ref.child('/companiesdetails/').orderByChild('invoice').equalTo(invoice).once('value')
+                    .then(function(snap) {
+                        if (snap && snap.val()) {
+                            const companies = snap.val();
+                            const companyId = Object.keys(companies)[0];
+                            const company = companies[companyId];
+                            
+                            if (company.firstImei && company.firstImei.toString() === imei.toString()) {
+                                resolve({ success: true, company: company });
+                            } else {
+                                reject({ success: false, errors: [ Errors.get('check-auth/imei-not-found') ]});
+                            }
+                        } else {
+                            reject({ success: false, errors: [ Errors.get('check-auth/invoice-not-found') ]});
+                        }
+                    })
+                    .catch(function(err) {
+                        console.error('FirebaseStore.checkAuthority.failed', err);
+                        reject({ success: false, errors: [ Errors.get(err.code) ]});
+                    });
+            } catch(e) {
+                console.error('FirebaseStore.checkAuthority.failed', e);
+                reject({ success: false, errors: [ Errors.get(e.code) ]});
+            }
+        });
     }
 };
 
