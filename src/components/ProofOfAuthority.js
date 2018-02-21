@@ -4,7 +4,8 @@ import TextField from 'material-ui/TextField';
 import i18n from '../utils/i18n';
 
 class ProofOfAuthority extends React.Component {
-    coonstructor() {
+    constructor() {
+        super();
         this.onChange = this.onChange.bind(this);
         this.validate = this.validate.bind(this);
     }
@@ -43,8 +44,19 @@ class ProofOfAuthority extends React.Component {
     onChange(e) {
         if (this.props.onChange) {
             const fieldName = e.target.name;
-            let {invoice, firstImei} = this.props;
-            this.props.onChange({ invoice, firstImei, [fieldName]: e.target.value }, () => {
+            
+            let data = {
+                invoice: this.props.invoice,
+                firstImei: this.props.firstImei
+            };
+
+            if (e.target.name === 'invoice') {
+                data.invoice = parseInt(e.target.value);
+            } else {
+                data[e.target.name] = e.target.value;
+            }
+
+            this.props.onChange(data, () => {
                 if (this.props.onValidation && this.props.validation) {
                     this.validate(fieldName)
                         .then(function(validation) {
@@ -122,7 +134,7 @@ class ProofOfAuthority extends React.Component {
                 <div className="formRow">
                 <div className="formColumn">
                     {/* <h4>Company info</h4> */}
-                    <TextField floatingLabelText={i18n.string('label_enter_company_invoice_number', {company: 'Grainger'})} floatingLabelFixed={false} name="invoice" value={this.props.invoice} onChange={this.onChange} errorText={this.showError('invoice')} />
+                    <TextField floatingLabelText={i18n.string('label_enter_company_invoice_number', {company: 'Grainger'})} floatingLabelFixed={false} name="invoice" type="number" value={this.props.invoice} onChange={this.onChange} errorText={this.showError('invoice')} />
                     <br/>
                     <TextField floatingLabelText={i18n.string('label_enter_first_imei_from_invoice')} floatingLabelFixed={false} name="firstImei" value={this.props.firstImei} onChange={this.onChange} errorText={this.showError('firstImei')} />
                     <br/>
