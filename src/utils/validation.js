@@ -37,7 +37,7 @@ const _isValidRegion = function (region) {
 
 const _isValidInvoice = function (invoice) {
     // figure out if any vaildation needed for invoice
-    return true;
+    return invoice > 0;
 }
 
 const _hasValue = function (val) {
@@ -261,9 +261,7 @@ const Validation = {
             } else if (!_hasValue(value) && optional) {
                 resolve();
             } else {
-                const invoice = value + '';
-
-                if (_isValidInvoice(invoice)) {
+                if (_isNumber(value) && _isValidInvoice(value)) {
                     resolve();
                 } else {
                     reject();
