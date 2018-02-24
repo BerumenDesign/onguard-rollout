@@ -1,11 +1,10 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import '../images/grainger_onguard_logo.png';
 
 const FormCreateGroupa = () => (<div>
   <div>
-    <img href="images/grainger_onguard_logo.png"/>
+// Please add S60 svg logo here
   </div>
 
   <div class="container smallContainer">
