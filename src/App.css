@@ -2,12 +2,18 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  background: #EAE8E8;
 }
 .container {
   max-width: 1000px;
   margin: 0 auto;
   padding: 2em;
-  border: 1px solid #ccc;
+  background: #fff;
+}
+.smallContainer{
+  max-width: 400px;
+  margin: 1em auto;
+
 }
 .formRow{
   display: flex;
@@ -26,11 +32,20 @@ body {
     justify-content: space-around;
     align-items: flex-start;
 }
+.center {
+  justify-content: center;
+}
+.loginButton{
+  margin-top: 3em;
+}
 .formButton{
   display: block;
   text-align: right;
   background: white;
   padding: 1em;
+}
+.fullButton{
+  min-width: 300px;
 }
 .activePlan{
   background: #F8FFFC !important;
@@ -64,6 +79,7 @@ body {
   width: 100%;
   background: #efefef;
 }
+
 
 /* Mobile  ----------- */
 @media only screen  and (max-width : 800px) {
