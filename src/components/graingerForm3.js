@@ -8,7 +8,7 @@ const GraingerForm3 = () => (<div class="container">
     <p>Your admin account has been created</p>
 
     <h3>Do you want to create a group and invite users?</h3>
-    <RaisedButton label="Enter payment method" primary={true}/>
+    <RaisedButton label="Yes, let's do it now" primary={true}/>
     <FlatButton label="OR DO IT LATER IN USER ADMIN TOOL" primary={false}/>
   </div>
 </div>);
