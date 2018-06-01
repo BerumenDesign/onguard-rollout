@@ -34,6 +34,16 @@ const _errorCodes = {
         field: 'invoice',
         message: 'Could not find a company, check the invoice number'
     },
+    'invite/user-already-in-group': {
+        type: '',
+        source: 'App',
+        message: 'User is already a part of this group'
+    },
+    'invite/user-invite-already-sent': {
+        type: '',
+        source: 'App',
+        message: 'An invitation has already been sent to this user for this group'
+    },
     'uncaughtexception': {
         type: 'uncaught',
         title: 'Unexpected error',
