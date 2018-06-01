@@ -4,7 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 const FormCreateGroupa = () => (<div>
   <div>
-// Please add S60 svg logo here
+      // Please add S60 svg logo here
   </div>
 
   <div class="container smallContainer">

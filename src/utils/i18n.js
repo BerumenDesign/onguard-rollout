@@ -42,7 +42,7 @@ const i18n = {
         LANG = code;
     },
     string: (key, params) => {
-        console.log('i18n.string', key, params, ' state: ', state);
+        // console.log('i18n.string', key, params, ' state: ', state);
         return state[key] ? Mustache.render(state[key], params || {}) : key;
     }
 };
