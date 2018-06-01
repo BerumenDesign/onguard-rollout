@@ -1,7 +1,9 @@
 import React from 'react';
 import Validation from '../utils/validation';
 import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 import i18n from '../utils/i18n';
+import logo from '../images/logo.png';
 
 class ProofOfAuthority extends React.Component {
     constructor() {
@@ -15,7 +17,7 @@ class ProofOfAuthority extends React.Component {
 
         if (validation) {
             let _validationPromises = [];
-            
+
             fields.forEach(function(field) {
                 _validationPromises.push(this.validate(field));
             }, this);
@@ -25,7 +27,7 @@ class ProofOfAuthority extends React.Component {
             }
 
             console.log('ProofOfAuthority.mounted.validation.promises', _validationPromises);
-            
+
             Promise.all(_validationPromises).then(function(vals) {
                 console.log('ProofOfAuthority.mounted.validationsPromises.then', vals);
                 vals.forEach(function (validated, i) {
@@ -44,7 +46,7 @@ class ProofOfAuthority extends React.Component {
     onChange(e) {
         if (this.props.onChange) {
             const fieldName = e.target.name;
-            
+
             let data = {
                 invoice: this.props.invoice,
                 firstImei: this.props.firstImei
@@ -75,12 +77,12 @@ class ProofOfAuthority extends React.Component {
     validate(field) {
         return new Promise(function (resolve, reject) {
             let validation = {...this.props.validation};
-        
+
             if (validation) {
             let valid = true;
             let errorMsg = null;
             let _promise = null;
-            
+
             switch (field) {
                 case 'invoice':
                     errorMsg = i18n.string('error_invalid_invoice_number');
@@ -105,7 +107,7 @@ class ProofOfAuthority extends React.Component {
                     valid = true;
                     errorMsg = null; //since validation passed, null the error
                     validation.fields[field] = {...validation.fields[field], valid, errorMsg };
-                
+
                     resolve(validation);
                 })
                 .catch(function() {
@@ -115,7 +117,7 @@ class ProofOfAuthority extends React.Component {
 
                     valid = false;
                     validation.fields[field] = {...validation.fields[field], valid, errorMsg };
-                    
+
                     resolve(validation);
                 });
             } else {
@@ -129,18 +131,34 @@ class ProofOfAuthority extends React.Component {
     }
     render() {
         return (
-            <form>
-                <h2>{i18n.string('label_use_prepaid_program')}</h2>
-                <div className="formRow">
-                <div className="formColumn">
-                    {/* <h4>Company info</h4> */}
-                    <TextField floatingLabelText={i18n.string('label_enter_company_invoice_number', {company: 'Grainger'})} floatingLabelFixed={false} name="invoice" type="number" value={this.props.invoice} onChange={this.onChange} errorText={this.showError('invoice')} />
-                    <br/>
-                    <TextField floatingLabelText={i18n.string('label_enter_first_imei_from_invoice')} floatingLabelFixed={false} name="firstImei" value={this.props.firstImei} onChange={this.onChange} errorText={this.showError('firstImei')} />
-                    <br/>
+            <div>
+                <div className="container smallContainer">
+                    <div className="text-center">
+                        <img src={logo} style={{maxWidth: '100%'}} />
+                    </div>
+                </div>
+                <div className="container smallContainer bg-white">
+                    <form>
+                        <h2 className="text-center">{i18n.string('label_use_prepaid_program')}</h2>
+                        <TextField
+                            floatingLabelText={i18n.string('label_enter_company_invoice_number', {company: 'Grainger'})}
+                            fullWidth={true}
+                            name="invoice"
+                            type="number"
+                            value={this.props.invoice}
+                            onChange={this.onChange}
+                            errorText={this.showError('invoice')} />
+                        <TextField
+                            floatingLabelText={i18n.string('label_enter_first_imei_from_invoice')}
+                            fullWidth={true}
+                            name="firstImei"
+                            value={this.props.firstImei}
+                            onChange={this.onChange}
+                            errorText={this.showError('firstImei')} />
+                        <RaisedButton fullWidth={true} label={i18n.string('btn_continue')} primary={true} onClick={this.props.onContinue} />
+                    </form>
                 </div>
             </div>
-          </form>
         );
     }
 };
