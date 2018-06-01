@@ -1,5 +1,5 @@
 const _isValidEmail = function ( email ) {
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test( email );
 };
 
@@ -49,6 +49,10 @@ const _passwordMeetsCriteria = function (password) {
     return password && password.length >= 8;
 };
 
+const _hasOneOf = (value, enums) => {
+    return enums.indexOf(value) !== -1;
+};
+
 const Validation = {
     IMEI: function(value, optional) {
         return new Promise((resolve, reject) => {
@@ -57,24 +61,24 @@ const Validation = {
             } else if (!_hasValue(value) && optional) {
                 resolve();
             }
-            var imei = (value + '').replace(/-/g, '');
+            let imei = (value + '').replace(/-/g, '');
 
             // validate IMEI number using the Luhn algorithm
             // https://en.wikipedia.org/wiki/Luhn_algorithm
             if (imei.length < 15) {
                 reject()
             } else {
-                var validationDigit = imei.substring((imei.length - 1), imei.length); //grab last digit, this is the validation digit
-                var _imei = imei.substring(0, imei.length-1); //exclude the validation digit
-                var _imeiArr = _imei.split('');
+                let validationDigit = imei.substring((imei.length - 1), imei.length); //grab last digit, this is the validation digit
+                let _imei = imei.substring(0, imei.length-1); //exclude the validation digit
+                let _imeiArr = _imei.split('');
                 //double every 2nd value in the IMEI number
-                for (var i = 1; i < _imeiArr.length; i+=2) {
-                    var _val = parseInt(_imeiArr[ i ]);
+                for (let i = 1; i < _imeiArr.length; i+=2) {
+                    let _val = parseInt(_imeiArr[ i ]);
                     _imeiArr[ i ] = (_val * 2).toString();
                 }
 
                 //add all the numbers
-                var total = 0;
+                let total = 0;
                 _imeiArr.join('').split('').forEach(function(val) {
                     total += parseInt(val);
                 });
@@ -85,6 +89,24 @@ const Validation = {
                     reject();
                 }
             }
+        });
+    },
+    enum: (value, enums, optional) => {
+        return new Promise((resolve, reject) => {
+            if (!_hasValue(value) && !optional) {
+                reject();
+            } else if (!_hasValue(value) && optional) {
+                resolve();
+            }
+
+            const acceptableValues = enums && Array.isArray(enums) ? enums : [];
+
+            if (_hasOneOf(value, acceptableValues)) {
+                resolve();
+            } else {
+                reject();
+            }
+
         });
     },
     email: function(value, optional) {
