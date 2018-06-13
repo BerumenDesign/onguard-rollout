@@ -31,7 +31,7 @@ class Register extends React.Component {
   constructor() {
     super();
     this.state = {
-      step: 3,
+      step: 0,
       region: '',
       employeeCount: '',
       invoice: '',
@@ -92,15 +92,31 @@ class Register extends React.Component {
       let _promise = [];
       switch (this.state.step) {
         case 0:
+          // check their entry and grab invoice details which will get us the companyId as well
           _promise.push(
               FirebaseStore.checkAuthority(this.state.firstImei, this.state.invoice)
                   .then(res => {
-                    this.setState({company: res.company});
+                    this.setState({invoiceDetails: res.invoice, company: {...this.state.company, id: res.invoice.companyId, name: res.invoice.companyName}});
                   })
           );
           break;
         case 1:
-          _promise.push(FirebaseStore.makeAdmin(this.state.user));
+          // after creating admin, use the companyId we got earlier to retrieve companydetails
+          _promise.push(
+            FirebaseStore.makeAdmin({...this.state.user, company: this.state.company})
+              .then(() => {
+                return FirebaseStore.getCompanyDetails(this.state.company.id)
+                  .then(res => {
+                    console.log('makeAdmin.then.getCompanyDetails.then', res)
+                    if (!res.address || typeof res.address === 'string') {
+                      res.address = {}
+                    }
+                    this.setState({company: {...this.state.company, ...res.company}}, () => {
+                      console.log('write company to state.then ', this.state.company);
+                    });
+                  })
+              })
+          );
           break;
         case 4:
           _promise.push(FirebaseStore.makeInvite(this.state.newUser, this.state.company.id, 'invoice_' + this.state.invoice));

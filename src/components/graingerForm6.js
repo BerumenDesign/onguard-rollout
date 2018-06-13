@@ -7,7 +7,7 @@ const graingerForm6 = () => (<div class="container">
   <div className="formRowCenter">
     <h2>You are good to go!</h2>
 
-    <h3>Do you want invite  more ERC users?</h3>
+    <h3>Do you want invite more ERC users?</h3>
     <RaisedButton label="Invite ERC users" secondary={false}/>
     <FlatButton label="OR DO IT LATER IN USER ADMIN TOOL" primary={false}/>
 
