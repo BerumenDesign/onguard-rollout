@@ -19,44 +19,45 @@ const store = {
         return new Promise((resolve, reject) => {
             try {
                 state.auth().createUserWithEmailAndPassword(params.email.toLowerCase(), params.password)
-                .then(function(user) {
-                    const id = _convertToId(params.email.toLowerCase());
-                    const { firstName, lastName, phone, shard } = params;
+                    .then(function(user) {
+                        const id = _convertToId(params.email.toLowerCase());
+                        const { firstName, lastName, phone, shard } = params;
 
-                    const companies = [
-                        {
-                            canDeleteUsers: false,
-                            companyName: params.company.name,
-                            id: params.company.id
-                        }
-                    ];
+                        const companies = [
+                            {
+                                canDeleteUsers: false,
+                                companyName: params.company.name,
+                                id: params.company.id
+                            }
+                        ];
 
-                    const fullNameLower = firstName.toLowerCase() + ' ' + lastName.toLowerCase();
+                        const fullNameLower = firstName.toLowerCase() + ' ' + lastName.toLowerCase();
 
-                    state.ref.child('/ercadmins/' + id)
-                        .set({
-                            adminId: params.email.toLowerCase(),
-                            admin: true,
-                            uid: user.uid,
-                            firstName,
-                            lastName,
-                            fullNameLower,
-                            phone,
-                            companies,
-                            shard
-                        })
-                        .then(function() {
-                            resolve({ success: true });
-                        })
-                        .catch(function(err) {
-                            console.error('FirebaseStore.makeAdmin.setErcAdmin.failed', err);
-                            reject({ success: false, errors: [ Errors.get(err.code) ]});
-                        });
-                })
-                .catch(function(err) {
-                    console.error('FirebaseStore.makeAdmin.createUserWithEmailAndPassword.failed', err);
-                    reject({ success: false, errors: [ Errors.get(err.code) ]});
-                });
+                        // TODO figure out if we need to pass in SHARD
+                        state.ref.child('/ercadmins/' + id)
+                            .set({
+                                adminId: params.email.toLowerCase(),
+                                admin: true,
+                                uid: user.uid,
+                                firstName,
+                                lastName,
+                                fullNameLower,
+                                phone,
+                                companies,
+                                // shard
+                            })
+                            .then(function() {
+                                resolve({ success: true });
+                            })
+                            .catch(function(err) {
+                                console.error('FirebaseStore.makeAdmin.setErcAdmin.failed', err);
+                                reject({ success: false, errors: [ Errors.get(err.code) ]});
+                            });
+                    })
+                    .catch(function(err) {
+                        console.error('FirebaseStore.makeAdmin.createUserWithEmailAndPassword.failed', err);
+                        reject({ success: false, errors: [ Errors.get(err.code) ]});
+                    });
             } catch (e) {
                 console.error('FirebaseStore.makeAdmin.createUserWithEmailAndPassword.unexpectederror', e);
                 reject({ success: false, errors: [ Errors.get(e.code) ]});
@@ -74,6 +75,26 @@ const store = {
                 reject({ success: false, errors: [ Errors.get(e.code) ]});
             }
         });
+    },
+    getCompanyDetails(id) {
+      return new Promise((resolve, reject) => {
+        try {
+          state.ref.child('/companiesdetails/' + id)
+            .once('value')
+            .then(snap => {
+                let company = snap.val();
+
+                if (company) {
+                    resolve({success: true, company});
+                } else {
+                  reject({ success: false, errors: [ Errors.get('uncaughtexception') ]});
+                }
+            })
+        } catch (e) {
+          console.error('FirebaseStore.getCompanyDetails.unexpectederror', e);
+          reject({ success: false, errors: [ Errors.get(e.code) ]});
+        }
+      });
     },
     checkUserName(email) {
         return new Promise((resolve, reject) => {
@@ -93,19 +114,20 @@ const store = {
     checkAuthority(imei, invoice) {
         return new Promise((resolve, reject) => {
             try{
-                state.ref.child('/companiesdetails/').orderByChild('invoice').equalTo(invoice).once('value')
+                // state.ref.child('/invoices/').orderByChild('invoice').equalTo(invoice).once('value')
+                console.log('checkAuth', imei, invoice)
+                state.ref.child('/invoices/' + invoice)
+                    .once('value')
                     .then(function(snap) {
-                        if (snap && snap.val()) {
-                            const companies = snap.val();
-                            const companyId = Object.keys(companies)[0];
-                            const company = companies[companyId];
-
-                            if (company.firstImei && company.firstImei.toString() === imei.toString()) {
-                                resolve({ success: true, company: company });
+                        let details = snap.val()
+                        if (details) {
+                            if (details.firstImei && details.firstImei.toString() === imei.toString()) {
+                              resolve({ success: true, invoice: details });
                             } else {
                                 reject({ success: false, errors: [ Errors.get('check-auth/imei-not-found') ]});
                             }
                         } else {
+                            // TODO maybe merge the two errors into one, since we can query both invoice# and imei in 1 check
                             reject({ success: false, errors: [ Errors.get('check-auth/invoice-not-found') ]});
                         }
                     })
