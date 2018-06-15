@@ -3,7 +3,7 @@ import Errors from '../utils/errors';
 import Config from '../config.json';
 import Twilio from '../stores/twilio';
 
-let state = null;
+const database = {};
 
 const store = {
     initialize() {
@@ -13,12 +13,12 @@ const store = {
             databaseURL: 'https://' + Config.firebaseId + '.firebaseio.com'
         };
 
-        state = new firebase(params);
+      database.state = new firebase(params);
     },
     makeAdmin(params) {
         return new Promise((resolve, reject) => {
             try {
-                state.auth().createUserWithEmailAndPassword(params.email.toLowerCase(), params.password)
+                database.state.auth().createUserWithEmailAndPassword(params.email.toLowerCase(), params.password)
                     .then(function(user) {
                         const id = _convertToId(params.email.toLowerCase());
                         const { firstName, lastName, phone, shard } = params;
@@ -34,7 +34,7 @@ const store = {
                         const fullNameLower = firstName.toLowerCase() + ' ' + lastName.toLowerCase();
 
                         // TODO figure out if we need to pass in SHARD
-                        state.ref.child('/ercadmins/' + id)
+                        database.state.ref.child('/ercadmins/' + id)
                             .set({
                                 adminId: params.email.toLowerCase(),
                                 admin: true,
@@ -47,6 +47,7 @@ const store = {
                                 // shard
                             })
                             .then(function() {
+                              console.log('makeAdmin.then.checkauth', database.state.auth().currentUser)
                                 resolve({ success: true });
                             })
                             .catch(function(err) {
@@ -69,7 +70,7 @@ const store = {
         return new Promise((resolve, reject) => {
             try {
                 const id = _convertToId(params.name);
-                state.ref.child('/companies/' + id)
+                database.state.ref.child('/companies/' + id)
             } catch (e) {
                 console.error('FirebaseStore.makeCompany.set.company.unexpectederror', e);
                 reject({ success: false, errors: [ Errors.get(e.code) ]});
@@ -79,12 +80,25 @@ const store = {
     getCompanyDetails(id) {
       return new Promise((resolve, reject) => {
         try {
-          state.ref.child('/companiesdetails/' + id)
+          database.state.ref.child('/companiesdetails/' + id)
             .once('value')
             .then(snap => {
                 let company = snap.val();
 
                 if (company) {
+                    if (!company.address || typeof company.address === 'string') {
+                      company.address = {}
+                    }
+
+                    let { city, country, postal, provstate } = company;
+
+                    company.address = {
+                      city,
+                      zip: postal,
+                      country,
+                      state: provstate
+                    };
+
                     resolve({success: true, company});
                 } else {
                   reject({ success: false, errors: [ Errors.get('uncaughtexception') ]});
@@ -96,10 +110,46 @@ const store = {
         }
       });
     },
+    updateCompany(company) {
+      return new Promise((resolve, reject) => {
+        try {
+          let { email, sameAsCompanyAddress } = company;
+          let { city, country, zip, state, address } = company.address;
+
+          if (!email) {
+            email = null;
+          }
+
+          let data = {
+            companyName: company.name,
+            phone: company.phone,
+            email,
+            streetAddress: address,
+            city,
+            postal: zip,
+            country,
+            provstate: state
+          };
+
+          if (sameAsCompanyAddress) {
+            data.billing = { city, country, zip, state, address }
+          }
+
+          database.state.ref.child('/companiesdetails/' + company.id)
+            .update(data)
+            .then(() => {
+              resolve({success: true});
+            })
+        } catch (e) {
+          console.error('FirebaseStore.updateCompany.error', e);
+          reject({ success: false, errors: [ Errors.get(e.code) ]});
+        }
+      })
+    },
     checkUserName(email) {
         return new Promise((resolve, reject) => {
             const id = _convertToId(email);
-            state.ref.child('/systemusers/' + id).once('value')
+            database.state.ref.child('/systemusers/' + id).once('value')
                 .then(function(snap) {
                     const _user = snap.val();
 
@@ -116,7 +166,7 @@ const store = {
             try{
                 // state.ref.child('/invoices/').orderByChild('invoice').equalTo(invoice).once('value')
                 console.log('checkAuth', imei, invoice)
-                state.ref.child('/invoices/' + invoice)
+                database.state.ref.child('/invoices/' + invoice)
                     .once('value')
                     .then(function(snap) {
                         let details = snap.val()
@@ -200,17 +250,17 @@ const store = {
 
                         if (userid) {
                             data.type = 'email';
-                            promises.push( state.ref.child( '/invitations/' + userid ).set( data ) );
+                            promises.push( database.state.ref.child( '/invitations/' + userid ).set( data ) );
                         }
 
                         if (data.phoneNumber) {
                             data.type = 'phone';
-                            promises.push( state.ref.child( '/invitations/' + data.phoneNumber ).set( data ) );
+                            promises.push( database.state.ref.child( '/invitations/' + data.phoneNumber ).set( data ) );
                         }
 
                         if (data.deviceid) {
                             data.type = 'imei';
-                            promises.push( state.ref.child( '/invitations/' + data.deviceid ).set( data ) );
+                            promises.push( database.state.ref.child( '/invitations/' + data.deviceid ).set( data ) );
                         }
 
                         return Promise.all( promises )
@@ -241,7 +291,7 @@ function _checkPhone (phone) {
 }
 
 function _getCompany (id) {
-    return state.ref.child('/companies/' + id).once('value');
+    return database.state.ref.child('/companies/' + id).once('value');
 }
 
 function _isUserAlreadyInGroup (cid, gid, uid) {
@@ -250,7 +300,7 @@ function _isUserAlreadyInGroup (cid, gid, uid) {
             return resolve({success: true, inGroup: false});
         }
 
-        state.ref.child('/companies/' + cid + '/groups/' + gid + '/users/' + uid)
+        database.state.ref.child('/companies/' + cid + '/groups/' + gid + '/users/' + uid)
             .once('value')
             .then(snap => { resolve({ success: true, inGroup: !!(snap && snap.val()) }); })
             .catch(err => reject(err));
