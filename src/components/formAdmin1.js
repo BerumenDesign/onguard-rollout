@@ -15,7 +15,7 @@ class TextForm1 extends React.Component {
 
     if (__validation) {
       let _validationPromises = [];
-      
+
       fields.forEach(function(field) {
         _validationPromises.push(this.validate(field));
       }, this);
@@ -25,7 +25,7 @@ class TextForm1 extends React.Component {
       }
 
       console.log('formAdmin1.validation.promises', _validationPromises);
-      
+
       Promise.all(_validationPromises).then(function(_validations) {
         console.log('formAdmin1.validationsPromises.then', _validations);
         _validations.forEach(function (validated, i) {
@@ -46,7 +46,7 @@ class TextForm1 extends React.Component {
     let fieldName = e.target.name;
     let value = e.target.value;
     let __user = {...this.props.user, [fieldName]: value};
-    
+
     this.props.onChange({ user: __user }, function () {
       this.validate(fieldName)
         .then(function(__validation) {
@@ -63,12 +63,12 @@ class TextForm1 extends React.Component {
   validate(field) {
     return new Promise(function (resolve, reject) {
       let validation = {...this.props.validation};
-    
+
       if (validation) {
         let valid = true;
         let errorMsg = null;
         let _promise = null;
-        
+
         switch (field) {
           case 'firstName':
             errorMsg = i18n.string('error_first_name_required');
@@ -105,7 +105,7 @@ class TextForm1 extends React.Component {
             valid = true;
             errorMsg = null; //since validation passed, null the error
             validation.fields[field] = {...validation.fields[field], valid, errorMsg };
-            
+
             resolve(validation);
           }).catch(function() {
             if (!validation.fields) {
@@ -114,14 +114,14 @@ class TextForm1 extends React.Component {
 
             valid = false;
             validation.fields[field] = {...validation.fields[field], valid, errorMsg };
-            
+
             resolve(validation);
           });
       } else {
         console.error('formAdmin1.validate.validation.undefined ', validation);
         reject();
       }
-    
+
     // return validation
     }.bind(this));
   }
@@ -133,22 +133,22 @@ class TextForm1 extends React.Component {
       <form>
         <h2>{i18n.string('label_create_admin_account')}</h2>
         <h3>{i18n.string('label_all_fields_required')}</h3>
-  
+
         <div className="formRow">
           <div className="formColumn">
             <h4>Basic info</h4>
-            <TextField floatingLabelText={i18n.string('label_first_name')} name="firstName" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('firstName')} />
+            <TextField floatingLabelText={i18n.string('label_first_name')} name="firstName" value={this.props.user.firstName} floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('firstName')} />
             <br/>
-            <TextField floatingLabelText={i18n.string('label_last_name')} name="lastName" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('lastName')} />
+            <TextField floatingLabelText={i18n.string('label_last_name')} name="lastName" value={this.props.user.lastName} floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('lastName')} />
             <br/>
-            <TextField floatingLabelText={i18n.string('label_phone_number')} name="phone" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('phone')} />
+            <TextField floatingLabelText={i18n.string('label_phone_number')} name="phone" value={this.props.user.phone} floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('phone')} />
             <br/>
           </div>
           <div className="formColumn">
             <h4>{i18n.string('label_login_credentials')}</h4>
-            <TextField floatingLabelText={i18n.string('label_username')} hintText={i18n.string('hint_username')} name="email" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('email')} />
+            <TextField floatingLabelText={i18n.string('label_username')} hintText={i18n.string('hint_username')} value={this.props.user.email} name="email" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('email')} />
             <br/>
-            <TextField floatingLabelText={i18n.string('label_password')} name="password" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('password')} />
+            <TextField floatingLabelText={i18n.string('label_password')} name="password" value={this.props.user.password} floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('password')} />
             <br/>
           </div>
         </div>
