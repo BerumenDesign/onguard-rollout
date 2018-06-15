@@ -38,7 +38,6 @@ class Register extends React.Component {
       firstImei: '',
       user: {},
       company: {
-        id: 'faizan_test',
         billing: {},
         address: {}
       },
@@ -107,16 +106,13 @@ class Register extends React.Component {
               .then(() => {
                 return FirebaseStore.getCompanyDetails(this.state.company.id)
                   .then(res => {
-                    console.log('makeAdmin.then.getCompanyDetails.then', res)
-                    if (!res.address || typeof res.address === 'string') {
-                      res.address = {}
-                    }
-                    this.setState({company: {...this.state.company, ...res.company}}, () => {
-                      console.log('write company to state.then ', this.state.company);
-                    });
+                    this.setState({company: {...this.state.company, ...res.company}});
                   })
               })
           );
+          break;
+        case 2:
+          _promise.push(FirebaseStore.updateCompany(this.state.company));
           break;
         case 4:
           _promise.push(FirebaseStore.makeInvite(this.state.newUser, this.state.company.id, 'invoice_' + this.state.invoice));
