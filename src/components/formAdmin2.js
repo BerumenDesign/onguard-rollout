@@ -27,7 +27,7 @@ class TextForm2 extends React.Component {
 
     if (__validation) {
       let _validationPromises = [];
-      
+
       fields.forEach(function(field) {
         _validationPromises.push(this.validate(field));
       }, this);
@@ -37,7 +37,7 @@ class TextForm2 extends React.Component {
       }
 
       console.log('formAdmin2.validation.promises', _validationPromises);
-      
+
       Promise.all(_validationPromises).then(function(_validations) {
         console.log('formAdmin2.validationsPromises.then', _validations);
         _validations.forEach(function (validated, i) {
@@ -46,7 +46,6 @@ class TextForm2 extends React.Component {
 
         // initialize validation
         if (__validation && this.props.onValidation) {
-          console.log('formAdmin2.validationsPromises.then.validationObject', __validation);
           this.props.onValidation(__validation);
         }
       }.bind(this)).catch(function(err) {
@@ -78,9 +77,13 @@ class TextForm2 extends React.Component {
     this.setState({ addressValidation }, function() {
       if (this.props.onValidation) {
         let _main_validation = {...this.props.validation};
-        
+
+        if (!_main_validation.fields) {
+          _main_validation.fields = {};
+        }
+
         ['address', 'city', 'zip', 'country', 'state'].forEach((field) => _main_validation.fields['address.' + field ] = addressValidation.fields[field] );
-        
+
         this.props.onValidation(_main_validation);
       }
     });
@@ -94,9 +97,9 @@ class TextForm2 extends React.Component {
     this.setState({ billingValidation }, function() {
       if (this.props.onValidation) {
         let _main_validation = {...this.props.validation};
-        
+
         ['address', 'city', 'zip', 'country', 'state'].forEach((field) => _main_validation.fields['billing.' + field ] = billingValidation.fields[field] );
-        
+
         this.props.onValidation(_main_validation);
       }
     });
@@ -104,12 +107,12 @@ class TextForm2 extends React.Component {
   validate(field) {
     return new Promise(function (resolve, reject) {
       let validation = {...this.props.validation};
-    
+
       if (validation) {
         let valid = true;
         let errorMsg = null;
         let _promise = null;
-        
+
         switch (field) {
           case 'name':
             errorMsg = i18n.string('error_company_name_required');
@@ -138,7 +141,7 @@ class TextForm2 extends React.Component {
             valid = true;
             errorMsg = null; //since validation passed, null the error
             validation.fields[field] = {...validation.fields[field], valid, errorMsg };
-            
+
             resolve(validation);
           }).catch(function() {
             if (!validation.fields) {
@@ -147,14 +150,14 @@ class TextForm2 extends React.Component {
 
             valid = false;
             validation.fields[field] = {...validation.fields[field], valid, errorMsg };
-            
+
             resolve(validation);
           });
       } else {
         console.error('formAdmin1.validate.validation.undefined ', validation);
         reject();
       }
-    
+
     // return validation
     }.bind(this));
   }
@@ -177,7 +180,7 @@ class TextForm2 extends React.Component {
         // remove billing validation
         let validation = {...this.props.validation};
         ['billing.address', 'billing.city', 'billing.zip', 'billing.country', 'billing.state'].forEach(key => delete validation.fields[key]);
-        this.props.onValidation(validation); 
+        this.props.onValidation(validation);
       }
     }.bind(this));
   }
@@ -198,14 +201,14 @@ class TextForm2 extends React.Component {
           </div>
           <div className="formColumn">
             <h4>{i18n.string('label_company_address')}</h4>
-            <Address 
+            <Address
               address={this.props.company.address.address}
               city={this.props.company.address.city}
               zip={this.props.company.address.zip}
               country={this.props.company.address.country}
               state={this.props.company.address.state}
-              onChange={this.onAddressChange} 
-              validation={this.state.addressValidation} 
+              onChange={this.onAddressChange}
+              validation={this.state.addressValidation}
               onValidation={this.onAddressValidation} />
           </div>
           <div className="formColumn">
@@ -213,14 +216,14 @@ class TextForm2 extends React.Component {
             <Checkbox label={i18n.string('label_same_as_company_address')} onCheck={this.toggleSameAddress} name="sameAsCompanyAddress" checked={this.props.company.sameAsCompanyAddress} /><br/>
             {
               this.props.company.sameAsCompanyAddress ? null : (
-                <Address 
+                <Address
                   address={this.props.company.billing.address}
                   city={this.props.company.billing.city}
                   zip={this.props.company.billing.zip}
                   country={this.props.company.billing.country}
                   state={this.props.company.billing.state}
-                  onChange={this.onBillingChange} 
-                  validation={this.state.billingValidation} 
+                  onChange={this.onBillingChange}
+                  validation={this.state.billingValidation}
                   onValidation={this.onBillingValidation} />
               )
             }
