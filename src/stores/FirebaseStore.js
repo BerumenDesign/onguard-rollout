@@ -23,13 +23,13 @@ const store = {
                         const id = _convertToId(params.email.toLowerCase());
                         const { firstName, lastName, phone, shard } = params;
 
-                        const companies = [
-                            {
-                                canDeleteUsers: false,
-                                companyName: params.company.name,
-                                id: params.company.id
-                            }
-                        ];
+                        const companies = {};
+
+                        companies[params.company.id] = {
+                          canDeleteUsers: false,
+                          companyName: params.company.name,
+                          id: params.company.id
+                        };
 
                         const fullNameLower = firstName.toLowerCase() + ' ' + lastName.toLowerCase();
 
@@ -47,7 +47,6 @@ const store = {
                                 // shard
                             })
                             .then(function() {
-                              console.log('makeAdmin.then.checkauth', database.state.auth().currentUser)
                                 resolve({ success: true });
                             })
                             .catch(function(err) {
@@ -194,8 +193,6 @@ const store = {
     makeInvite(user, companyId, groupId) {
         return new Promise((resolve, reject) => {
             try {
-                console.log('FirebaseStore.makeInvite.success', user);
-                // resolve({success: true, user: user});
                 const userid = user.email ? _convertToId(user.email) : undefined;
 
                 const reqs = [_checkPhone(user.phone), _isUserAlreadyInGroup(companyId, groupId, userid), _getCompany(companyId)];
