@@ -44,6 +44,12 @@ const _errorCodes = {
         source: 'App',
         message: 'An invitation has already been sent to this user for this group'
     },
+    'twilio/invalid-phone': {
+        type: 'validation',
+        source: 'twilio',
+        field: 'phone',
+        message: 'Invalid phone number'
+    },
     'uncaughtexception': {
         type: 'uncaught',
         title: 'Unexpected error',

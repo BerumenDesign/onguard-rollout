@@ -15,12 +15,8 @@ const store = {
                 .then(res => {
                     if ( res.data && res.data.data && res.data.data.phoneNumber ) {
                         resolve({success: true, phone: res.data.data.phoneNumber});
-                        // deferred.resolve( { success: true, phone: res.data.data.phoneNumber } );
-                        // $scope.submit();
                     } else {
-                        // console.error( '$makeUser.verify.response.no.phoneNumber', res );
-                        // $scope.error = 'Failed to verify phone number';
-                        reject({ errors:[{success: false, type: 'validation', field: 'phone', message: 'Invalid phone number'}]});
+                        reject({code: 'twilio/invalid-phone'})
                     }
                 });
         });
