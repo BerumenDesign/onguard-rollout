@@ -218,7 +218,7 @@ class Register extends React.Component {
     return (
       <div>
           {
-              this.state.step > 0 && <div className="bg-white"><HorizontalLinearStepper step={this.state.step} /></div>
+              this.state.step > 0 && <div className="bg-white flex flex-content-center"><HorizontalLinearStepper step={this.state.step} /></div>
           }
 
           {
