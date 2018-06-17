@@ -15,7 +15,6 @@ import UncaughtErrors from './components/common/UncaughtErrors';
 import FirebaseStore from './stores/FirebaseStore';
 import LookupStore from './stores/LookupStore';
 import i18n from './utils/i18n';
-import GraingerForm2 from './components/graingerForm2';
 import GraingerForm6 from './components/graingerForm6';
 
 const App = () => (
@@ -71,6 +70,7 @@ class Register extends React.Component {
     this.isValidated = this.isValidated.bind(this);
     this.handleErrors = this.handleErrors.bind(this);
     this.dismissUncaughtError = this.dismissUncaughtError.bind(this);
+    this.prevStep = this.prevStep.bind(this);
   }
   componentDidMount() {
     FirebaseStore.initialize();
@@ -85,11 +85,13 @@ class Register extends React.Component {
       }
     });
   }
-  nextStep() {
+  nextStep(params) {
     // check that form is valid for given step and throw errors on any invalid fields
-    this.isValidated().then(function () {
+    this.isValidated().then(() => {
       let _promise = [];
-      switch (this.state.step) {
+      let step = this.state.step + 0; // for changing step value in certain cases
+
+      switch (step) {
         case 0:
           // check their entry and grab invoice details which will get us the companyId as well
           _promise.push(
@@ -117,20 +119,48 @@ class Register extends React.Component {
         case 4:
           _promise.push(FirebaseStore.makeInvite(this.state.newUser, this.state.company.id, 'invoice_' + this.state.invoice));
           break;
+        case 5:
+          // this will take user back to makeInvite step
+          step = 3;
+          break;
         default:
           break;
       }
 
-      Promise.all(_promise).then(function() {
-        this.setState({ step: ++this.state.step, validation: { valid: false } });
-      }.bind(this))
-      .catch(function (err) {
-        console.error('App.nextStep.promises.failed', err);
+      Promise.all(_promise)
+        .then(() => {
+          this.setState({ step: ++step, validation: { valid: false } });
+        })
+        .catch((err) => {
+          console.error('App.nextStep.promises.failed', err);
+          if (err.errors) {
+            this.handleErrors(err.errors);
+          }
+        });
+    });
+  }
+  prevStep(params) {
+    let _promise = [];
+    let step = this.state.step + 0; // for mutating step value in certain cases
+
+    switch (step) {
+      case 4:
+        step = 6;
+        break;
+      default:
+        break;
+    }
+
+    Promise.all(_promise)
+      .then(() => {
+        this.setState({ step: --step, validation: { valid: false } });
+      })
+      .catch((err) => {
+        console.error('App.prevStep.promises.failed', err);
         if (err.errors) {
           this.handleErrors(err.errors);
         }
-      }.bind(this));
-    }.bind(this));
+      });
   }
   isValidated() {
     return new Promise(function (resolve, reject) {
@@ -153,7 +183,6 @@ class Register extends React.Component {
     }.bind(this));
   }
   onValidation(e) {
-    console.log('App.onValidation', e)
     let validation = {...this.state.validation, ...e};
     // check each field and set valid to false if there are invalid fields
     validation.valid = Object.keys(validation.fields).filter(k => !validation.fields[k].valid).length === 0;
@@ -206,30 +235,16 @@ class Register extends React.Component {
           {
             this.state.step > 0 &&
             <div className="container bg-white">
-                {this.state.step === 99 && <GraingerForm2 />}
-                {/*{this.state.step === 0 ? <TextForm onChange={this.onChange} onValidation={this.onValidation} validation={this.state.validation} region={this.state.region} employeeCount={this.state.employeeCount} /> : null}*/}
                 {this.state.step === 1 && <TextForm1 user={this.state.user} onValidation={this.onValidation} validation={this.state.validation} onChange={this.onChange} />}
                 {this.state.step === 2 && <TextForm2 company={this.state.company} onChange={this.onChange} onValidation={this.onValidation} validation={this.state.validation} />}
-                {/*{this.state.step === 2 && <TextForm3 billing={this.state.billing} onChange={this.onChange} />}*/}
-                {/*{this.state.step === 3 && <TextForm4 billing={this.state.billing} onChange={this.onChange} />}*/}
                 {this.state.step === 3 && <TextForm6 onContinue={this.nextStep}/>}
                 {this.state.step === 4 && <FormAddUserInfo user={this.state.newUser} onChange={this.onChange} validation={this.state.validation} onValidation={this.onValidation} />}
-                {this.state.step === 5 && <GraingerForm6/>}
-                {/*<TextForm5/>
-                  <TextForm3a/>
-                  <TextForm4/>
-                  <TextForm4a/>
-                  <TextForm5/>
-                  <TextForm6/>
-                  <FormCreateGroup/>
-                  <FormCreateGroupa/>
-                  <FormCreateGroup1/>
-                  <FormAddUserInfo/> */}
+                {this.state.step === 5 && <GraingerForm6 onContinue={this.nextStep}/>}
 
                 {
                     [0,3,5].indexOf(this.state.step) === -1 &&
                     <div className="formButton">
-                        <FlatButton label={i18n.string('btn_cancel')} />
+                        <FlatButton label={i18n.string('btn_cancel')} onClick={this.prevStep} />
                         <RaisedButton label={i18n.string('btn_continue')} primary={true} onClick={this.nextStep} />
                     </div>
                 }
