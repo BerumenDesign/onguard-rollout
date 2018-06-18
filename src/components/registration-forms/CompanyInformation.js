@@ -1,9 +1,9 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
-import Address from './common/Address';
-import Validation from '../utils/validation';
-import i18n from '../utils/i18n';
+import Address from '../common/Address';
+import Validation from '../../utils/validation';
+import i18n from '../../utils/i18n';
 
 class TextForm2 extends React.Component {
   constructor() {

@@ -3,7 +3,14 @@ btn_cancel: "Cancel"
 btn_continue: "Continue"
 btn_close: "Close"
 
-### ProofOfAuthority
+### Steps
+step_verification: "Verification"
+step_make_admin: "Create Admin Account"
+step_update_company: "Update Company Information"
+step_invite_or_skip: "Confirmation"
+step_invite_user: "Invite User"
+
+### Verification
 label_use_prepaid_program: "Use prepaid program"
 label_enter_company_invoice_number: "Enter {{company}} invoice number"
 label_enter_first_imei_from_invoice: "Enter the first IMEI from your invoice"

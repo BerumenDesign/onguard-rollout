@@ -1,5 +1,4 @@
-import firebase from './firebase';
-import Errors from '../utils/errors';
+import firebase from '../utils/firebase';
 import Config from '../config.json';
 
 let state = null;
@@ -12,7 +11,7 @@ const store = {
             databaseURL: 'https://' + Config.lookupFirebaseId + '.firebaseio.com',
             name: 'Lookup'
         };
-    
+
         state = new firebase(params);
     },
     checkUserName: (email) => {
@@ -35,7 +34,7 @@ const store = {
 function _convertToId (name) {
     name = name.toLowerCase(); //returns new, doesn't change the original
     name = name.trim();
-    
+
     name = name.replace(/\_/g,'__');
     name = name.replace(/\./g,'_');
     name = name.replace(/\#/g,'_');

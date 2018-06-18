@@ -1,10 +1,10 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
-import Validation from "../utils/validation";
-import i18n from "../utils/i18n";
+import Validation from "../../utils/validation";
+import i18n from "../../utils/i18n";
 
-class FormAddUserInfo extends React.Component {
+class UserInvite extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -156,4 +156,4 @@ class FormAddUserInfo extends React.Component {
   }
 }
 
-export default FormAddUserInfo;
+export default UserInvite;

@@ -1,4 +1,4 @@
-import firebase from './firebase';
+import firebase from '../utils/firebase';
 import Errors from '../utils/errors';
 import Config from '../config.json';
 import 'whatwg-fetch';

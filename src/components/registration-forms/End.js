@@ -3,7 +3,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 
-const graingerForm6 = (props) => {
+const end = (props) => {
   const newInvite = () => {
     props.onContinue('invite');
   };
@@ -27,4 +27,4 @@ const graingerForm6 = (props) => {
   );
 }
 
-export default graingerForm6;
+export default end;

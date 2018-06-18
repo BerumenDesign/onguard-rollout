@@ -1,4 +1,4 @@
-import firebase from './firebase';
+import firebase from '../utils/firebase';
 import Errors from '../utils/errors';
 import Config from '../config.json';
 import Twilio from '../stores/twilio';
@@ -163,8 +163,6 @@ const store = {
     checkAuthority(imei, invoice) {
         return new Promise((resolve, reject) => {
             try{
-                // state.ref.child('/invoices/').orderByChild('invoice').equalTo(invoice).once('value')
-                console.log('checkAuth', imei, invoice)
                 database.state.ref.child('/invoices/' + invoice)
                     .once('value')
                     .then(function(snap) {

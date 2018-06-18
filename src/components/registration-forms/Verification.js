@@ -1,11 +1,11 @@
 import React from 'react';
-import Validation from '../utils/validation';
+import Validation from '../../utils/validation';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import i18n from '../utils/i18n';
-import logo from '../images/logo.png';
+import i18n from '../../utils/i18n';
+import logo from '../../images/logo.png';
 
-class ProofOfAuthority extends React.Component {
+class Verification extends React.Component {
     constructor() {
         super();
         this.onChange = this.onChange.bind(this);
@@ -26,10 +26,10 @@ class ProofOfAuthority extends React.Component {
                 validation.fields = {};
             }
 
-            console.log('ProofOfAuthority.mounted.validation.promises', _validationPromises);
+            console.log('Verification.mounted.validation.promises', _validationPromises);
 
             Promise.all(_validationPromises).then(function(vals) {
-                console.log('ProofOfAuthority.mounted.validationsPromises.then', vals);
+                console.log('Verification.mounted.validationsPromises.then', vals);
                 vals.forEach(function (validated, i) {
                     validation.fields[fields[i]] = validated.fields[fields[i]];
                 });
@@ -39,7 +39,7 @@ class ProofOfAuthority extends React.Component {
                     this.props.onValidation(validation);
                 }
             }.bind(this)).catch(function(err) {
-                console.error('ProofOfAuthority.mounted.validation.failed ', err);
+                console.error('Verification.mounted.validation.failed ', err);
             });
         }
     }
@@ -68,7 +68,7 @@ class ProofOfAuthority extends React.Component {
                             }
                         }.bind(this))
                         .catch(function() {
-                            console.error('ProofOfAuthority.validation.failed', this.props.validation);
+                            console.error('Verification.validation.failed', this.props.validation);
                         }.bind(this));
                 }
             });
@@ -163,4 +163,4 @@ class ProofOfAuthority extends React.Component {
     }
 };
 
-export default ProofOfAuthority;
+export default Verification;

@@ -1,7 +1,7 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
-import Validation from '../utils/validation';
-import i18n from '../utils/i18n';
+import Validation from '../../utils/validation';
+import i18n from '../../utils/i18n';
 
 class TextForm1 extends React.Component {
   constructor() {
