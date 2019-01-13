@@ -3,7 +3,7 @@ import TextField from 'material-ui/TextField';
 import Validation from '../../utils/validation';
 import i18n from '../../utils/i18n';
 
-class TextForm1 extends React.Component {
+class CreateAdmin extends React.Component {
   constructor() {
     super();
     this.onChange = this.onChange.bind(this);
@@ -136,7 +136,7 @@ class TextForm1 extends React.Component {
 
         <div className="formRow">
           <div className="formColumn">
-            <h4>Basic info</h4>
+            <h4>{i18n.string('label_basic_info')}</h4>
             <TextField floatingLabelText={i18n.string('label_first_name')} name="firstName" value={this.props.user.firstName} floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('firstName')} />
             <br/>
             <TextField floatingLabelText={i18n.string('label_last_name')} name="lastName" value={this.props.user.lastName} floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('lastName')} />
@@ -157,33 +157,4 @@ class TextForm1 extends React.Component {
   }
 }
 
-// class Username extends React.Component {
-//   constructor() {
-//     super();
-//     this.state = {
-//       query: {
-//         timeout: null,
-//         delay: 200,
-//         username: this.props.username
-//       }
-//     };
-//     this.onChange = this.onChange.bind(this);
-//   }
-//   onChange(e) {
-//     let query = { ...this.state.query };
-//     if (query.timeout) {
-//       clearTimeout(query.timeout);
-//     }
-
-//     query.username = e.target.value;
-
-//     query.timeout = setTimeout(function() {
-
-//     }.bind(this), query.delay);
-//   }
-//   render() {
-//     <TextField floatingLabelText="Username" name="email" floatingLabelFixed={false} onChange={this.onChange} errorText={this.showError('email')} />
-//   }
-// }
-
-export default TextForm1;
+export default CreateAdmin;

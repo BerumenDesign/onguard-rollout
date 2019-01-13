@@ -2,20 +2,21 @@ import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import PropTypes from 'prop-types'
+import i18n from '../../utils/i18n';
 
-const TextForm6 = (props) => (
+const Confirmation = (props) => (
   <div className="formRowCenter">
-    <h2>Congratulations</h2>
-    <p>Your admin account has been created</p>
+    <h2>{i18n.string('label_confirmation_heading')}</h2>
+    <p>{i18n.string('label_confirmation_subheading')}</p>
 
-    <h3>Do you want to invite users?</h3>
-    <RaisedButton label="YES, LET'S DO IT NOW" primary={true} onClick={props.onContinue}/> <br />
-    <FlatButton label="OR DO IT LATER IN GROUP SETTINGS" primary={false}/>
+    <h3>{i18n.string('label_invite_heading')}</h3>
+    <RaisedButton label={i18n.string('btn_confirmation_invite_user')} primary={true} onClick={props.onContinue}/> <br />
+    <FlatButton label={i18n.string('btn_confirmation_skip_invite_user')} primary={false}/>
   </div>
 );
 
-TextForm6.propTypes = {
+Confirmation.propTypes = {
     onContinue: PropTypes.func.isRequired
 };
 
-export default TextForm6;
+export default Confirmation;

@@ -5,7 +5,7 @@ import Address from '../common/Address';
 import Validation from '../../utils/validation';
 import i18n from '../../utils/i18n';
 
-class TextForm2 extends React.Component {
+class CompanyInformation extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -191,7 +191,7 @@ class TextForm2 extends React.Component {
         <h3>{i18n.string('label_all_fields_required')}</h3>
         <div className="formRow">
           <div className="formColumn">
-            <h4>Company info</h4>
+            <h4>{i18n.string('label_company_info')}</h4>
             <TextField floatingLabelText={i18n.string('label_company_name')} floatingLabelFixed={false} name="name" value={this.props.company.name} onChange={this.onChange} errorText={this.showError('name')} />
             <br/>
             <TextField floatingLabelText={i18n.string('label_company_phone')} floatingLabelFixed={false} name="phone" value={this.props.company.phone} onChange={this.onChange} errorText={this.showError('phone')} />
@@ -234,4 +234,4 @@ class TextForm2 extends React.Component {
   }
 };
 
-export default TextForm2;
+export default CompanyInformation;

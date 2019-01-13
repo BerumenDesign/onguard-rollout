@@ -23,6 +23,7 @@ label_last_name: "Last Name"
 label_username: "Username"
 label_password: "Password"
 label_phone_number: "Phone Number"
+label_basic_info: "Basic info"
 
 ### Company Creation
 label_company_name: "Company Name"
@@ -34,6 +35,14 @@ label_add_company: "Add company"
 label_all_fields_required: "All fields are required"
 label_company_address: "Company address"
 label_billing_address: "Billing address"
+label_company_info: "Company info"
+
+### Confirmation
+label_confirmation_heading: "Congratulations"
+label_confirmation_subheading: "Your admin account has been created"
+label_invite_heading: "Do you want to invite users?"
+btn_confirmation_invite_user: "YES, LET'S DO IT NOW"
+btn_confirmation_skip_invite_user: "OR DO IT LATER IN GROUP SETTINGS"
 
 ### Data Center Region
 label_data_center_region: "Data Center Region"
