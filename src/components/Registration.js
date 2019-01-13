@@ -205,7 +205,10 @@ class Registration extends React.Component {
     return (
       <div>
         {
-          this.state.step > 0 && <div className="bg-white flex flex-content-center"><Stepper step={this.state.step} /></div>
+          this.state.step > 0 &&
+            <div className="bg-white flex flex-content-center">
+              <Stepper step={this.state.step} />
+            </div>
         }
 
         {
@@ -221,26 +224,24 @@ class Registration extends React.Component {
 
         {
           this.state.step > 0 &&
-          <div className="container bg-white">
-            {this.state.step === 1 && <CreateAdmin user={this.state.user} onValidation={this.onValidation} validation={this.state.validation} onChange={this.onChange} />}
-            {this.state.step === 2 && <CompanyInformation company={this.state.company} onChange={this.onChange} onValidation={this.onValidation} validation={this.state.validation} />}
-            {this.state.step === 3 && <Confirmation onContinue={this.nextStep}/>}
-            {this.state.step === 4 && <UserInvite user={this.state.newUser} onChange={this.onChange} validation={this.state.validation} onValidation={this.onValidation} />}
-            {this.state.step === 5 && <End onContinue={this.nextStep}/>}
+            <div className="container bg-white">
+              {this.state.step === 1 && <CreateAdmin user={this.state.user} onValidation={this.onValidation} validation={this.state.validation} onChange={this.onChange} />}
+              {this.state.step === 2 && <CompanyInformation company={this.state.company} onChange={this.onChange} onValidation={this.onValidation} validation={this.state.validation} />}
+              {this.state.step === 3 && <Confirmation onContinue={this.nextStep}/>}
+              {this.state.step === 4 && <UserInvite user={this.state.newUser} onChange={this.onChange} validation={this.state.validation} onValidation={this.onValidation} />}
+              {this.state.step === 5 && <End onContinue={this.nextStep}/>}
 
-            {
-              [0,3,5].indexOf(this.state.step) === -1 &&
-              <div className="formButton">
-                <FlatButton label={i18n.string('btn_cancel')} onClick={this.prevStep} />
-                <RaisedButton label={i18n.string('btn_continue')} primary={true} onClick={this.nextStep} />
-              </div>
-            }
-            {
-              this.state.uncaughterrors.map((error, index) => {
-                return <UncaughtErrors error={error} onClose={this.dismissUncaughtError.bind(index)} />
-              })
-            }
-          </div>
+              {
+                [0,3,5].indexOf(this.state.step) === -1 &&
+                  <div className="formButton">
+                    <FlatButton label={i18n.string('btn_cancel')} onClick={this.prevStep} />
+                    <RaisedButton label={i18n.string('btn_continue')} primary={true} onClick={this.nextStep} />
+                  </div>
+              }
+              {
+                this.state.uncaughterrors.map((error, index) => <UncaughtErrors error={error} onClose={this.dismissUncaughtError.bind(index)} />)
+              }
+            </div>
         }
       </div>
     )
