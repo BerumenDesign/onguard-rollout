@@ -9,6 +9,7 @@ step_make_admin: "Create Admin Account"
 step_update_company: "Update Company Information"
 step_invite_or_skip: "Confirmation"
 step_invite_user: "Invite User"
+step_make_company: "Company Info"
 
 ### Verification
 label_use_prepaid_program: "Use prepaid program"
@@ -24,6 +25,8 @@ label_username: "Username"
 label_password: "Password"
 label_phone_number: "Phone Number"
 label_basic_info: "Basic info"
+label_create_admin_details: "This user will be the OnGuard Account administrator and main contact for communications from OnGuard"
+label_create_admin_details_2: "This user will also be valid Web ERC Administrator capable of adding/managing users and this settings"
 
 ### Company Creation
 label_company_name: "Company Name"
@@ -36,6 +39,7 @@ label_all_fields_required: "All fields are required"
 label_company_address: "Company address"
 label_billing_address: "Billing address"
 label_company_info: "Company info"
+label_optional: "Optional"
 
 ### Confirmation
 label_confirmation_heading: "Congratulations"
