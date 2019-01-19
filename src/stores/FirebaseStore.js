@@ -25,11 +25,11 @@ const store = {
 
                         const companies = {};
 
-                        companies[params.company.id] = {
-                          canDeleteUsers: false,
-                          companyName: params.company.name,
-                          id: params.company.id
-                        };
+                        // companies[params.company.id] = {
+                        //   canDeleteUsers: false,
+                        //   companyName: params.company.name,
+                        //   id: params.company.id
+                        // };
 
                         const fullNameLower = firstName.toLowerCase() + ' ' + lastName.toLowerCase();
 
