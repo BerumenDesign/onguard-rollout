@@ -23,7 +23,7 @@ class CompanyInformation extends React.Component {
   }
   componentDidMount() {
     let __validation = {...this.props.validation};
-    const fields = ['name', 'phone', 'email'];
+    const fields = ['name', 'phone', 'email', 'maxUsers', 'employeeCount'];
 
     if (__validation) {
       let _validationPromises = [];
@@ -126,6 +126,13 @@ class CompanyInformation extends React.Component {
             errorMsg = i18n.string('error_invalid_email_address');
             _promise = Validation.email(this.props.company[field], true);
             break;
+          case 'maxUsers':
+            errorMsg = i18n.string('error_company_max_users_required');
+            _promise = Validation.count(parseInt(this.props.company[field]), 1, 9999999);
+            break;
+          case 'employeeCount':
+            _promise = Validation.count(parseInt(this.props.company[field]), 1, 9999999, true);
+            break;
           default:
             console.error('formAdmin1.validate.field.undefined ', field);
             reject();
@@ -194,7 +201,7 @@ class CompanyInformation extends React.Component {
             <h4>{i18n.string('label_company_info')}</h4>
             <TextField floatingLabelText={i18n.string('label_company_name')} floatingLabelFixed={false} name="name" value={this.props.company.name} onChange={this.onChange} errorText={this.showError('name')} />
             <br/>
-            <TextField floatingLabelText={i18n.string('label_company_phone')} floatingLabelFixed={false} name="phone" value={this.props.company.phone} onChange={this.onChange} errorText={this.showError('phone')} />
+            <TextField type={'tel'} floatingLabelText={i18n.string('label_company_phone')} floatingLabelFixed={false} name="phone" value={this.props.company.phone} onChange={this.onChange} errorText={this.showError('phone')} />
             <br/>
             <TextField floatingLabelText={i18n.string('label_email') + ' (' + i18n.string('label_optional') + ')'} floatingLabelFixed={false} name="email" value={this.props.company.email} onChange={this.onChange} errorText={this.showError('email')} />
             <br/>
@@ -212,22 +219,27 @@ class CompanyInformation extends React.Component {
               onValidation={this.onAddressValidation} />
           </div>
           <div className="formColumn">
-            <h4>{i18n.string('label_billing_address')}</h4>
-            <Checkbox label={i18n.string('label_same_as_company_address')} onCheck={this.toggleSameAddress} name="sameAsCompanyAddress" checked={this.props.company.sameAsCompanyAddress} /><br/>
-            {
-              this.props.company.sameAsCompanyAddress ? null : (
-                <Address
-                  address={this.props.company.billing.address}
-                  city={this.props.company.billing.city}
-                  zip={this.props.company.billing.zip}
-                  country={this.props.company.billing.country}
-                  state={this.props.company.billing.state}
-                  onChange={this.onBillingChange}
-                  validation={this.state.billingValidation}
-                  onValidation={this.onBillingValidation} />
-              )
-            }
+            <TextField type={'number'} floatingLabelText={i18n.string('label_number_of_employees')} floatingLabelFixed={false} name="employeeCount" value={this.props.company.employeeCount} onChange={this.onChange} errorText={this.showError('employeeCount')} />
+            <br/>
+            <TextField type={'number'} floatingLabelText={i18n.string('label_number_of_lone_workers')} floatingLabelFixed={false} name="maxUsers" value={this.props.company.maxUsers} onChange={this.onChange} errorText={this.showError('maxUsers')} />
           </div>
+          {/*<div className="formColumn">*/}
+            {/*<h4>{i18n.string('label_billing_address')}</h4>*/}
+            {/*<Checkbox label={i18n.string('label_same_as_company_address')} onCheck={this.toggleSameAddress} name="sameAsCompanyAddress" checked={this.props.company.sameAsCompanyAddress} /><br/>*/}
+            {/*{*/}
+              {/*this.props.company.sameAsCompanyAddress ? null : (*/}
+                {/*<Address*/}
+                  {/*address={this.props.company.billing.address}*/}
+                  {/*city={this.props.company.billing.city}*/}
+                  {/*zip={this.props.company.billing.zip}*/}
+                  {/*country={this.props.company.billing.country}*/}
+                  {/*state={this.props.company.billing.state}*/}
+                  {/*onChange={this.onBillingChange}*/}
+                  {/*validation={this.state.billingValidation}*/}
+                  {/*onValidation={this.onBillingValidation} />*/}
+              {/*)*/}
+            {/*}*/}
+          {/*</div>*/}
         </div>
       </form>
     );
