@@ -3,7 +3,7 @@ import {Step, Stepper, StepLabel} from 'material-ui/Stepper';
 import i18n from '../utils/i18n'
 
 const HorizontalLinearStepper = (props) => {
-  const steps = ['step_verification', 'step_make_admin', 'step_update_company', 'step_invite_or_skip', 'step_invite_user'];
+  const steps = ['step_verification', 'step_make_admin', 'step_make_company', 'step_invite_or_skip', 'step_invite_user'];
 
     return (
       <div>
