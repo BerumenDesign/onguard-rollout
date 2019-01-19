@@ -132,6 +132,8 @@ class CreateAdmin extends React.Component {
     return (
       <form>
         <h2>{i18n.string('label_create_admin_account')}</h2>
+        <p>{i18n.string('label_create_admin_details')}</p>
+        <p><b>{i18n.string('label_create_admin_details_2')}</b></p>
         <h3>{i18n.string('label_all_fields_required')}</h3>
 
         <div className="formRow">
