@@ -18,7 +18,7 @@ class Registration extends React.Component {
   constructor() {
     super();
     this.state = {
-      step: 0,
+      step: 1, // we're skipping step0 (verification) to allow everyone to register
       region: '',
       employeeCount: '',
       invoice: '',
@@ -101,7 +101,8 @@ class Registration extends React.Component {
           );
           break;
         case 2:
-          _promise.push(FirebaseStore.updateCompany(this.state.company));
+          _promise.push(FirebaseStore.makeCompany(this.state.company));
+          // _promise.push(FirebaseStore.updateCompany(this.state.company));
           break;
         case 4:
           _promise.push(FirebaseStore.makeInvite(this.state.newUser, this.state.company.id, 'invoice_' + this.state.invoice));
@@ -211,16 +212,16 @@ class Registration extends React.Component {
             </div>
         }
 
-        {
-          this.state.step === 0 &&
-          <Verification
-            onChange={this.onChange}
-            onContinue={this.nextStep}
-            invoice={this.state.invoice}
-            firstImei={this.state.firstImei}
-            validation={this.state.validation}
-            onValidation={this.onValidation} />
-        }
+        {/*{*/}
+          {/*this.state.step === 0 &&*/}
+          {/*<Verification*/}
+            {/*onChange={this.onChange}*/}
+            {/*onContinue={this.nextStep}*/}
+            {/*invoice={this.state.invoice}*/}
+            {/*firstImei={this.state.firstImei}*/}
+            {/*validation={this.state.validation}*/}
+            {/*onValidation={this.onValidation} />*/}
+        {/*}*/}
 
         {
           this.state.step > 0 &&
