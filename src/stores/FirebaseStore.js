@@ -2,6 +2,7 @@ import firebase from '../utils/firebase';
 import Errors from '../utils/errors';
 import Config from '../config.json';
 import Twilio from '../stores/twilio';
+import Address from "../components/common/Address";
 
 const database = {};
 
@@ -42,12 +43,11 @@ const store = {
                                 firstName,
                                 lastName,
                                 fullNameLower,
-                                phone,
-                                companies,
+                                phone
                                 // shard
                             })
                             .then(function() {
-                                resolve({ success: true });
+                                resolve({ success: true, id });
                             })
                             .catch(function(err) {
                                 console.error('FirebaseStore.makeAdmin.setErcAdmin.failed', err);
@@ -64,12 +64,62 @@ const store = {
             }
         });
     },
+    authorizeCompany (params) {
+        // this is to write company to user's companies node so they have access to write to that path
+        return new Promise((resolve, reject) => {
+            try {
+                const {id, company} = params;
+
+                if (!id || !company || !company.name) {
+                    throw new Error({message: 'updateAdmin() failed, missing required parameters', data: params});
+                }
+
+                database.state.ref.child('/ercadmins/' + id)
+                    .update({
+                      companies: {
+                          [_convertToId(company.name)]: {
+                            canDeleteUsers: false,
+                            companyName: company.name,
+                            id: _convertToId(company.name)
+                          }
+                      }
+                    })
+                    .then(() => {resolve({success: true})})
+                    .catch(err => {throw err;})
+            } catch (e) {
+                reject({ success: false, errors: [ Errors.get(e.code) ]});
+            }
+        })
+    },
     makeCompany(params) {
         // on hold for now
         return new Promise((resolve, reject) => {
             try {
                 const id = _convertToId(params.name);
-                database.state.ref.child('/companies/' + id)
+
+                let company = {
+                    id,
+                    companyName: params.name,
+                    lowercasename: params.name.toLowerCase()
+                };
+
+                let details = Object.assign({}, company, {
+                    address: params.address.address,
+                    city: params.address.city,
+                    zip: params.address.zip,
+                    country: params.address.country,
+                    state: params.address.state
+                });
+
+                console.log('makeCompany', company, details);
+
+                return Promise.all([database.state.ref.child(`/companies/${id}`).set(company), database.state.ref.child(`/companiesdetails/${id}`).set(details)])
+                    .then(() => resolve({success: true, id}))
+                    .catch(e => {
+                        console.error('makeCompany.failed', e);
+                        throw e;
+                    })
+
             } catch (e) {
                 console.error('FirebaseStore.makeCompany.set.company.unexpectederror', e);
                 reject({ success: false, errors: [ Errors.get(e.code) ]});
@@ -193,6 +243,8 @@ const store = {
             try {
                 const userid = user.email ? _convertToId(user.email) : undefined;
 
+                console.log('makeInvite', user, companyId, groupId);
+
                 const reqs = [_checkPhone(user.phone), _isUserAlreadyInGroup(companyId, groupId, userid), _getCompany(companyId)];
 
                 return Promise.all(reqs)
@@ -272,6 +324,37 @@ const store = {
         });
     }
 };
+
+function _companyNotExist (id) {
+  return new Promise((resolve, reject) => {
+    try {
+      database.state.ref.child('/companies/' + id).once('value')
+          .then(snap => {
+            let _company = snap.val();
+
+            if (_company) {
+              //a company with same ID was found
+              resolve({success: true, exist: true})
+            } else {
+              return database.state.ref.child('/companiesdetails/' + id).once('value')
+                .then(function(detailsnap) {
+                  let _details = detailsnap.val();
+
+                  resolve({success: true, exist: !!(_details)})
+                })
+                .catch(err => {
+                    throw err;
+                })
+            }
+          })
+          .catch(err => {
+            throw err;
+          });
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
 
 function _checkPhone (phone) {
     return new Promise((resolve, reject) => {
