@@ -128,7 +128,7 @@ class UserInvite extends React.Component {
                           <TextField name="firstName" errorText={this.showError('firstName')} floatingLabelText="First name" floatingLabelFixed={false} value={this.props.user.firstName} onChange={this.onChange}/>
                           <TextField name="lastName" errorText={this.showError('lastName')}floatingLabelText="Last name" floatingLabelFixed={false} value={this.props.user.lastName} onChange={this.onChange}/>
                           <TextField name="email" errorText={this.showError('email')} floatingLabelText="Email" floatingLabelFixed={false} value={this.props.user.email} onChange={this.onChange}/>
-                          <TextField name="phone" errorText={this.showError('phone')} floatingLabelText="Mobile phone number" floatingLabelFixed={false} value={this.props.user.phone} onChange={this.onChange}/>
+                          <TextField name="phone" type="tel" errorText={this.showError('phone')} floatingLabelText="Mobile phone number" floatingLabelFixed={false} value={this.props.user.phone} onChange={this.onChange}/>
                           <TextField name="imei" errorText={this.showError('imei')} floatingLabelText="IMEI number (optional)" floatingLabelFixed={false} value={this.props.user.imei} onChange={this.onChange}/>
                       </div>
                       <div className="formColumn">
