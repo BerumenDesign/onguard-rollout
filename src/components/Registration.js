@@ -92,19 +92,26 @@ class Registration extends React.Component {
           // after creating admin, use the companyId we got earlier to retrieve companydetails
           _promise.push(
             FirebaseStore.makeAdmin({...this.state.user, company: this.state.company})
-              .then(() => {
-                return FirebaseStore.getCompanyDetails(this.state.company.id)
-                  .then(res => {
-                    this.setState({company: {...this.state.company, ...res.company}});
-                  })
+              .then((res) => {
+                this.setState({user: {...this.state.user, id: res.id}})
+              //   return FirebaseStore.getCompanyDetails(this.state.company.id)
+              //     .then(res => {
+              //       this.setState({company: {...this.state.company, ...res.company}});
+              //     })
               })
           );
           break;
         case 2:
-          _promise.push(FirebaseStore.makeCompany(this.state.company));
+          // authorize user to the company, then make it.
+          _promise.push(
+            FirebaseStore.authorizeCompany({id: this.state.user.id, company: this.state.company})
+              .then(() => FirebaseStore.makeCompany(this.state.company))
+              .then(res => this.setState({company: {...this.state.company, id: res.id}}))
+          );
           // _promise.push(FirebaseStore.updateCompany(this.state.company));
           break;
         case 4:
+          console.log('Registration.nextStep().makeInvite()', this.state.newUser)
           _promise.push(FirebaseStore.makeInvite(this.state.newUser, this.state.company.id, 'invoice_' + this.state.invoice));
           break;
         case 5:
