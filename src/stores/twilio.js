@@ -1,16 +1,11 @@
-import firebase from '../utils/firebase';
-import Errors from '../utils/errors';
-import Config from '../config.json';
 import 'whatwg-fetch';
-
-let state = null;
 
 const store = {
     validate: (phone) => {
         return new Promise((resolve, reject) => {
-            fetch('/api/twilio/phone', {
-                method: 'GET',
-                params: {phone}
+            console.log('twilio.validate', phone);
+            fetch(`/api/twilio/phone?phone=${phone}`, {
+                method: 'GET'
             })
                 .then(res => {
                     if ( res.data && res.data.data && res.data.data.phoneNumber ) {
